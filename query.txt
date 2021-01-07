@@ -1,0 +1,30 @@
+create table pelanggan (
+    id int PRIMARY KEY,
+    nama varchar(250),
+    alamat varchar(250));
+
+create table mobil (
+    noRangka varchar(250) PRIMARY KEY,
+    noPolisi varchar(250),
+    tglBeli date,
+    id int,
+    FOREIGN KEY (id) REFERENCES pelanggan(id))
+
+create table detail_servis (
+    idServis int PRIMARY KEY,
+    tglServisTerakhir date,
+    tglServisSelanjutnya date,
+    noRangka varchar(250),
+    FOREIGN KEY (noRangka) REFERENCES mobil(noRangka))
+
+insert into pelanggan (nama, alamat)  values 
+('Surya Palupi', 'Jln. Yabansai No 2, Perumnas 1 Waena'),
+('Jericho Siahaya', 'Jln. Yabansai No 2, Perumnas 1 Waena')
+
+
+insert into detail_servis(tglServisTerakhir, tglServisSelanjutnya, noRangka) values
+('2020-12-15', '2021-05-15', '214253MH6775D'),
+('2020-12-20', '2021-05-20', '214253MH6975D')
+
+
+select nama, noPolisi, tglServisTerakhir, tglServisSelanjutnya from pelanggan, mobil, detail_servis where pelanggan.id = mobil.id and mobil.noRangka = detail_servis.noRangka
