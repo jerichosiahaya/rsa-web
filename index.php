@@ -1,7 +1,26 @@
 <?php
 include_once("config.php");
-$result = mysqli_query($conn, "select pelanggan.id, mobil.noRangka, nama, noPolisi, tglServisTerakhir, tglServisSelanjutnya from pelanggan, mobil, detail_servis where pelanggan.id = mobil.id and mobil.noRangka = detail_servis.noRangka ORDER BY tglServisSelanjutnya ASC");
+$result = mysqli_query(
+    $conn, 
+    "select pelanggan.id, mobil.noRangka, nama, noPolisi, tglServisTerakhir, tglServisSelanjutnya, TIMESTAMPDIFF(DAY,curdate(),tglServisSelanjutnya) AS due 
+    from pelanggan, mobil, detail_servis 
+    where pelanggan.id = mobil.id and mobil.noRangka = detail_servis.noRangka and TIMESTAMPDIFF(DAY,curdate(),tglServisSelanjutnya) >= 0
+    ORDER BY tglServisSelanjutnya ASC"
+);
+
+$res2 = mysqli_query(
+    $conn, 
+    "select pelanggan.id, mobil.noRangka, nama, noPolisi, tglServisTerakhir, tglServisSelanjutnya, TIMESTAMPDIFF(DAY,curdate(),tglServisSelanjutnya) AS due 
+    from pelanggan, mobil, detail_servis 
+    where pelanggan.id = mobil.id and mobil.noRangka = detail_servis.noRangka and TIMESTAMPDIFF(DAY,curdate(),tglServisSelanjutnya) < 0
+    ORDER BY tglServisSelanjutnya ASC"
+);
+
 date_default_timezone_set('Asia/Jayapura');
+
+$arr = mysqli_fetch_all ($result, MYSQLI_ASSOC);
+$arr2 = mysqli_fetch_all ($res2, MYSQLI_ASSOC);
+
 $date = date("Y-m-d");
 ?>
 <!DOCTYPE html>
@@ -19,6 +38,13 @@ $date = date("Y-m-d");
 </head>
 
 <body>
+    <!-- Check Data -->
+    <!-- <pre>
+    <?php
+    print_r($arr2);
+    ?>
+    </pre> -->
+
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,77 +70,171 @@ $date = date("Y-m-d");
         </div>
     </nav>
     <div class="container mt-4">
-        <nav aria-label="breadcrumb">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="incoming-tab" data-bs-toggle="tab" href="#incoming" role="tab" aria-controls="incoming" aria-selected="true">Incoming</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="overdue-tab" data-bs-toggle="tab" href="#overdue" role="tab" aria-controls="overdue" aria-selected="false">Overdue</a>
+            </li>
+            <!-- <li class="nav-item" role="presentation">
+                <a class="nav-link" id="contact-tab" data-bs-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
+            </li> -->
+        </ul>
+        <!-- <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item active" aria-current="page">Home</li>
             </ol>
-        </nav>
-        <table class="table is-bordered" id="tabel-data">
-            <thead>
-                <tr>
-                    <th>Nama Pemilik</th>
-                    <th>No Polisi</th>
-                    <th>Tanggal Servis Terakhir</th>
-                    <th>Tanggal Servis Selanjutnya</th>
-                    <th>Due</th>
-                    <th>Detail Pelanggan</th>
-                    <th>Whatsapp</th>
-                </tr>
-            <tbody>
-                <?php
-                $noHp = '+6285244449300';
-                while ($user_data = mysqli_fetch_array($result)) {
-                    /*
-                    $a = [];
-                    $tglServisSelanjutnya = $user_data['tglServisSelanjutnya'];
-                    //$tglServisSelanjutnya = $a;
-                    echo json_encode($tglServisSelanjutnya);
-                    foreach ((array) $tglServisSelanjutnya as $dueStr) {
-                        $date1 = date_create($date);
-                        $date2 = date_create($tglServisSelanjutnya);
-                        $diff = date_diff($date1, $date2)->format("d-m-Y");
-                        $highlight_css = "";
-                        if ($diff > 1 && $diff <= 3) {
-                            $highlight_css = "table-warning";
-                        } elseif ($diff == 1) {
-                            $highlight_css = "table-danger";
+        </nav> -->
+
+        <div class="tab-content" id="myTabContent">
+
+            <!-- Incoming Content -->
+            <div class="tab-pane fade show active" id="incoming" role="tabpanel" aria-labelledby="incoming-tab">
+                <br>
+                <table class="table is-bordered" id="tabel-data">
+                    <thead>
+                        <tr>
+                            <th>Nama Pemilik</th>
+                            <th>No Polisi</th>
+                            <th>Tanggal Servis Terakhir</th>
+                            <th>Tanggal Servis Selanjutnya</th>
+                            <th>Due</th>
+                            <th>Detail Pelanggan</th>
+                            <th>Whatsapp</th>
+                        </tr>
+                    <tbody>
+                        <?php
+                        $noHp = '+6285244449300';
+                        foreach ($arr as $user_data) {
+                            /*
+                            $a = [];
+                            $tglServisSelanjutnya = $user_data['tglServisSelanjutnya'];
+                            //$tglServisSelanjutnya = $a;
+                            echo json_encode($tglServisSelanjutnya);
+                            foreach ((array) $tglServisSelanjutnya as $dueStr) {
+                                $date1 = date_create($date);
+                                $date2 = date_create($tglServisSelanjutnya);
+                                $diff = date_diff($date1, $date2)->format("d-m-Y");
+                                $highlight_css = "";
+                                if ($diff > 1 && $diff <= 3) {
+                                    $highlight_css = "table-warning";
+                                } elseif ($diff == 1) {
+                                    $highlight_css = "table-danger";
+                                }
+                                
+                            } */
+                            // $date1 = date_create($date);
+                            // $date2 = date_create($user_data['tglServisSelanjutnya']);
+                            // $diff = date_diff($date2, $date1)->format("%r%a");
+                            $highlight_css = "";
+                            $button_css = "btn btn-info";
+                            if ($user_data['due'] >= -3 && $user_data['due'] < 0) {
+                                $highlight_css = "table-danger";
+                                $button_css = "btn btn-danger";
+                            } elseif ($user_data['due'] == 0) {
+                                $highlight_css = "table-warning";
+                                $button_css = "btn btn-info disabled";
+                            }
+                            echo "<tr class = '$highlight_css'>";
+                            echo "<td>" . $user_data['nama'] . "</td>";
+                            echo "<td>" . $user_data['noPolisi'] . "</td>";
+                            echo "<td>" . $user_data['tglServisTerakhir'] . "</td>";
+                            echo "<td>" . $user_data['tglServisSelanjutnya'] . "</td>";
+                            echo "<td>" . $user_data['due'] . "Hari</td>";
+                            echo "<td><a href='detail.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>LIHAT</a> | <a href='edit.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>EDIT</a></td>";
+                            echo "<td><a href='https://wa.me/" . $noHp . "?text=Halo Sdr/i " . $user_data['nama'] . ", kami dari CV Kombos Toyota Jayapura ingin mengingatkan bahwa mobil Anda dengan no polisi " . $user_data['noPolisi'] . " sudah harus diservis.' class='$button_css' role='button'>KIRIM</a></td></tr>";
+                            //<a href='https://wa.me/15551234567?text=I%20am%20interested%20in%20your%20services.%20How%20to%20get%20started%3F'>KIRIM</a>
                         }
-                        
-                    } */
-                    $date1 = date_create($date);
-                    $date2 = date_create($user_data['tglServisSelanjutnya']);
-                    $diff = date_diff($date2, $date1)->format("%r%a");
-                    $highlight_css = "";
-                    $button_css = "btn btn-info";
-                    if ($diff >= -3 && $diff < 0) {
-                        $highlight_css = "table-danger";
-                        $button_css = "btn btn-danger";
-                    } elseif ($diff == 0) {
-                        $highlight_css = "table-warning";
-                        $button_css = "btn btn-info disabled";
-                    }
-                    echo "<tr class = '$highlight_css'>";
-                    echo "<td>" . $user_data['nama'] . "</td>";
-                    echo "<td>" . $user_data['noPolisi'] . "</td>";
-                    echo "<td>" . $user_data['tglServisTerakhir'] . "</td>";
-                    echo "<td>" . $user_data['tglServisSelanjutnya'] . "</td>";
-                    echo "<td>" . $diff . "Hari</td>";
-                    echo "<td><a href='detail.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>LIHAT</a> | <a href='edit.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>EDIT</a></td>";
-                    echo "<td><a href='https://wa.me/" . $noHp . "?text=Halo Sdr/i " . $user_data['nama'] . ", kami dari CV Kombos Toyota Jayapura ingin mengingatkan bahwa mobil Anda dengan no polisi " . $user_data['noPolisi'] . " sudah harus diservis.' class='$button_css' role='button'>KIRIM</a></td></tr>";
-                    //<a href='https://wa.me/15551234567?text=I%20am%20interested%20in%20your%20services.%20How%20to%20get%20started%3F'>KIRIM</a>
-                }
-                //echo $diff;
-                //echo $diff->format("%R%a days ");
-                ?>
-            </tbody>
-        </table>
-        <a href="insert.php" class='btn btn-success btn-sm' role='button'>TAMBAH</a>
-        <!--<a href="add.php"><button class='button is-success is-rounded' style="margin-left: 32em" name='submit'><b>+</b></button></a>-->
+                        //echo $diff;
+                        //echo $diff->format("%R%a days ");
+                        ?>
+                    </tbody>
+                </table>
+                <a href="insert.php" class='btn btn-success btn-sm' role='button'>TAMBAH</a>
+                <!--<a href="add.php"><button class='button is-success is-rounded' style="margin-left: 32em" name='submit'><b>+</b></button></a>-->
+            </div>
+            <!-- End Incoming Content -->
+            
+            <!-- Overdue Content -->
+            <div class="tab-pane fade" id="overdue" role="tabpanel" aria-labelledby="overdue-tab">
+                <br>
+                <table class="table is-bordered" id="tabel-data2">
+                    <thead>
+                        <tr>
+                            <th>Nama Pemilik</th>
+                            <th>No Polisi</th>
+                            <th>Tanggal Servis Terakhir</th>
+                            <th>Tanggal Servis Selanjutnya</th>
+                            <th>Due</th>
+                            <th>Detail Pelanggan</th>
+                            <th>Whatsapp</th>
+                        </tr>
+                    <tbody>
+                        <?php
+                        $noHp = '+6285244449300';
+                        //while ($user_data = mysqli_fetch_array($res2)) 
+                        foreach ($arr2 as $user_data){
+                            /*
+                            $a = [];
+                            $tglServisSelanjutnya = $user_data['tglServisSelanjutnya'];
+                            //$tglServisSelanjutnya = $a;
+                            echo json_encode($tglServisSelanjutnya);
+                            foreach ((array) $tglServisSelanjutnya as $dueStr) {
+                                $date1 = date_create($date);
+                                $date2 = date_create($tglServisSelanjutnya);
+                                $diff = date_diff($date1, $date2)->format("d-m-Y");
+                                $highlight_css = "";
+                                if ($diff > 1 && $diff <= 3) {
+                                    $highlight_css = "table-warning";
+                                } elseif ($diff == 1) {
+                                    $highlight_css = "table-danger";
+                                }
+                                
+                            } */
+                            // $date1 = date_create($date);
+                            // $date2 = date_create($user_data['tglServisSelanjutnya']);
+                            // $diff = date_diff($date2, $date1)->format("%r%a");
+                            $highlight_css = "";
+                            $button_css = "btn btn-info";
+                            if ($user_data['due'] >= -3 && $user_data['due'] < 0) {
+                                $highlight_css = "table-danger";
+                                $button_css = "btn btn-danger";
+                            } elseif ($user_data['due'] == 0) {
+                                $highlight_css = "table-warning";
+                                $button_css = "btn btn-info disabled";
+                            }
+                            echo "<tr class = '$highlight_css'>";
+                            echo "<td>" . $user_data['nama'] . "</td>";
+                            echo "<td>" . $user_data['noPolisi'] . "</td>";
+                            echo "<td>" . $user_data['tglServisTerakhir'] . "</td>";
+                            echo "<td>" . $user_data['tglServisSelanjutnya'] . "</td>";
+                            echo "<td>" . $user_data['due'] . "Hari</td>";
+                            echo "<td><a href='detail.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>LIHAT</a> | <a href='edit.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>EDIT</a></td>";
+                            echo "<td><a href='https://wa.me/" . $noHp . "?text=Halo Sdr/i " . $user_data['nama'] . ", kami dari CV Kombos Toyota Jayapura ingin mengingatkan bahwa mobil Anda dengan no polisi " . $user_data['noPolisi'] . " sudah harus diservis.' class='$button_css' role='button'>KIRIM</a></td></tr>";
+                            //<a href='https://wa.me/15551234567?text=I%20am%20interested%20in%20your%20services.%20How%20to%20get%20started%3F'>KIRIM</a>
+                        }
+                        //echo $diff;
+                        //echo $diff->format("%R%a days ");
+                        ?>
+                    </tbody>
+                </table>
+                <a href="insert.php" class='btn btn-success btn-sm' role='button'>TAMBAH</a>
+                <!--<a href="add.php"><button class='button is-success is-rounded' style="margin-left: 32em" name='submit'><b>+</b></button></a>-->
+            </div>
+            <!-- End Overdue Content -->
+
+        </div>
     </div>
 
     <script>
         $(document).ready(function() {
-            $('#tabel-data').DataTable();
+            $('#tabel-data').DataTable({
+                "ordering": false
+            });
+            $('#tabel-data2').DataTable({
+                "ordering": false
+            });
         });
     </script>
 </body>
