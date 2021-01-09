@@ -77,9 +77,9 @@ $date = date("Y-m-d");
             <li class="nav-item" role="presentation">
                 <a class="nav-link" id="overdue-tab" data-bs-toggle="tab" href="#overdue" role="tab" aria-controls="overdue" aria-selected="false">Overdue</a>
             </li>
-            <!-- <li class="nav-item" role="presentation">
-                <a class="nav-link" id="contact-tab" data-bs-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
-            </li> -->
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="search-tab" data-bs-toggle="tab" href="#search" role="tab" aria-controls="search" aria-selected="false">Search</a>
+            </li>
         </ul>
         <!-- <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
@@ -141,7 +141,7 @@ $date = date("Y-m-d");
                             echo "<td>" . $user_data['noPolisi'] . "</td>";
                             echo "<td>" . $user_data['tglServisTerakhir'] . "</td>";
                             echo "<td>" . $user_data['tglServisSelanjutnya'] . "</td>";
-                            echo "<td>" . $user_data['due'] . "Hari</td>";
+                            echo "<td>" . $user_data['due'] . " Hari</td>";
                             echo "<td><a href='detail.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>LIHAT</a> | <a href='edit.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>EDIT</a></td>";
                             echo "<td><a href='https://wa.me/" . $noHp . "?text=Halo Sdr/i " . $user_data['nama'] . ", kami dari CV Kombos Toyota Jayapura ingin mengingatkan bahwa mobil Anda dengan no polisi " . $user_data['noPolisi'] . " sudah harus diservis.' class='$button_css' role='button'>KIRIM</a></td></tr>";
                             //<a href='https://wa.me/15551234567?text=I%20am%20interested%20in%20your%20services.%20How%20to%20get%20started%3F'>KIRIM</a>
@@ -224,6 +224,81 @@ $date = date("Y-m-d");
             </div>
             <!-- End Overdue Content -->
 
+            <!-- Search Content -->
+            <div class="tab-pane fade" id="search" role="tabpanel" aria-labelledby="search-tab">
+                <br>
+                <div class='container pt-5'>
+                    <h1>Search Due</h1>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <form method='post' action="<?php echo $_SERVER['PHP_SELF'];?>#search" class="pt-5">
+                                <div class='form-group row'>
+                                    <label class='col-sm-3' for='days'>Days: </label>
+                                    <div class='col-sm-6'><input class='form-control' type='number' name='days' placeholder = "Sisa Hari..." required></div>
+                                </div>
+                                <button type='submit' name='submit' class='btn btn-primary' role='button'>Search</a>
+                            </form>
+                        </div>
+                    </div>
+                    <?php
+                    if(isset($_POST['submit'])){
+                        //echo("Days: " . $_POST['days'] . "<br>");
+                        $id = $_POST['days'];
+                        $result3 = mysqli_query(
+                            $conn, 
+                            "select pelanggan.id, mobil.noRangka, nama, noPolisi, tglServisTerakhir, tglServisSelanjutnya, TIMESTAMPDIFF(DAY,curdate(),tglServisSelanjutnya) AS due 
+                            from pelanggan, mobil, detail_servis 
+                            where pelanggan.id = mobil.id and mobil.noRangka = detail_servis.noRangka and TIMESTAMPDIFF(DAY,curdate(),tglServisSelanjutnya) = $id
+                            ORDER BY tglServisSelanjutnya ASC"
+                        );
+                        $arr3 = mysqli_fetch_all ($result3, MYSQLI_ASSOC);
+                    ?>
+                    <br>
+                    <table class="table is-bordered" id="tabel-data3">
+                        <thead>
+                            <tr>
+                                <th>Nama Pemilik</th>
+                                <th>No Polisi</th>
+                                <th>Tanggal Servis Terakhir</th>
+                                <th>Tanggal Servis Selanjutnya</th>
+                                <th>Due</th>
+                                <th>Detail Pelanggan</th>
+                                <th>Whatsapp</th>
+                            </tr>
+                        <tbody>
+                            <?php
+                            $noHp = '+6285244449300';
+                            foreach ($arr3 as $user_data) {
+                                $highlight_css = "";
+                                $button_css = "btn btn-info";
+                                if ($user_data['due'] >= -3 && $user_data['due'] < 0) {
+                                    $highlight_css = "table-danger";
+                                    $button_css = "btn btn-danger";
+                                } elseif ($user_data['due'] == 0) {
+                                    $highlight_css = "table-warning";
+                                    $button_css = "btn btn-info disabled";
+                                }
+                                echo "<tr class = '$highlight_css'>";
+                                echo "<td>" . $user_data['nama'] . "</td>";
+                                echo "<td>" . $user_data['noPolisi'] . "</td>";
+                                echo "<td>" . $user_data['tglServisTerakhir'] . "</td>";
+                                echo "<td>" . $user_data['tglServisSelanjutnya'] . "</td>";
+                                echo "<td>" . $user_data['due'] . " Hari</td>";
+                                echo "<td><a href='detail.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>LIHAT</a> | <a href='edit.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>EDIT</a></td>";
+                                echo "<td><a href='https://wa.me/" . $noHp . "?text=Halo Sdr/i " . $user_data['nama'] . ", kami dari CV Kombos Toyota Jayapura ingin mengingatkan bahwa mobil Anda dengan no polisi " . $user_data['noPolisi'] . " sudah harus diservis.' class='$button_css' role='button'>KIRIM</a></td></tr>";
+                                //<a href='https://wa.me/15551234567?text=I%20am%20interested%20in%20your%20services.%20How%20to%20get%20started%3F'>KIRIM</a>
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                    <a href="insert.php" class='btn btn-success btn-sm' role='button'>TAMBAH</a>
+
+                    <?php
+                    }
+                    ?>
+                </div>
+            </div>
+            <!-- End Search Content -->
         </div>
     </div>
 
@@ -235,6 +310,18 @@ $date = date("Y-m-d");
             $('#tabel-data2').DataTable({
                 "ordering": false
             });
+            $('#tabel-data3').DataTable({
+                "ordering": false
+            });
+            var url = document.location.toString();
+            if (url.match('#')) {
+                $('.nav-tabs a[href="#' + url.split('#')[1] + '"]').tab('show');
+            } 
+
+            // Change hash for page-reload
+            $('.nav-tabs a').on('shown.bs.tab', function (e) {
+                window.location.hash = e.target.hash;
+            })
         });
     </script>
 </body>
