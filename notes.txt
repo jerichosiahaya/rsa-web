@@ -1,4 +1,0 @@
-- kumpul data due: -7 perharinya (select pake database where date >= -7)
-- tgl servis selanjutnya otomatis (penambahan per 6 bulan)
-- tgl delivery date - tgl servis selanjutnya = 1 bulan
-- centang booked, pas dia direminder lalu dia blg oke lalu pilih tanggal booking ----> masukkin data ke kolom booking (database baru)
