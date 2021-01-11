@@ -26,3 +26,12 @@ table, tr, td, th{
 caption {
     color: gray;
 }
+/* INSERT */
+.form-insert {
+    margin-bottom: 1em;
+}
+.optional-text {
+    color: gray;
+}
+
+
