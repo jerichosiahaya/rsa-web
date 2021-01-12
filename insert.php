@@ -49,23 +49,23 @@ include_once("config.php");
             <input type="button" name="hapus" class="btn btn-info" value="Hapus" id="hapus">
             <input type="button" name="submit" class="btn btn-primary" value="Submit" id="submit" data-bs-toggle="modal" data-bs-target="#exampleModal">
             <!--<input type="button" class="btn btn-primary" value="Simpan" data-bs-toggle="modal" data-bs-target="#exampleModal2">-->
-
-            <!-- Modal sebelum submit -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            Apakah data sudah benar?
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" name="simpan" id="simpan">Save</button>
-                        </div>
-                    </div>
+    </div>
+    <!-- Modal sebelum submit -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    Apakah data sudah benar?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" name="simpan" id="simpan">Save</button>
                 </div>
             </div>
-            <!-- Modal sebelum submit -->
-        </form>
+        </div>
+    </div>
+    <!-- Modal sebelum submit -->
+    </form>
     </div>
     <script>
         $(document).ready(function() {
@@ -168,6 +168,7 @@ include_once("config.php");
                 $("#telepon").val("");
                 $("#noRangka").val("");
                 $("#noPolisi").val("");
+                $("#noMesin").val("");
                 $("#tglServisTerakhir").val("");
                 $("#tglServisSelanjutnya").val("");
                 $("#tglBeli").val("");
