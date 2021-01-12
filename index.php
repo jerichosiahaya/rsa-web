@@ -45,30 +45,8 @@ $date = date("Y-m-d");
     ?>
     </pre> -->
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-                <a class="navbar-brand" href="#">RSA</a>
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="insert.php" tabindex="-1">Tambah</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="about.php">How to use</a>
-                    </li>
-                </ul>
-                <form class="d-flex">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true"><i><?php echo $date ?></i></a>
-                </form>
-            </div>
-        </div>
-    </nav>
+    <?php include "navbar.php"?>
+
     <div class="container mt-4">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
@@ -102,6 +80,7 @@ $date = date("Y-m-d");
                             <th>Due</th>
                             <th>Detail Pelanggan</th>
                             <th>Whatsapp</th>
+                            <th>Booking Servis</th>
                         </tr>
                     <tbody>
                         <?php
@@ -143,7 +122,9 @@ $date = date("Y-m-d");
                             echo "<td>" . $user_data['tglServisSelanjutnya'] . "</td>";
                             echo "<td>" . $user_data['due'] . " Hari</td>";
                             echo "<td><a href='detail.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>LIHAT</a> | <a href='edit.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>EDIT</a></td>";
-                            echo "<td><a href='https://wa.me/" . $noHp . "?text=Halo Sdr/i " . $user_data['nama'] . ", kami dari CV Kombos Toyota Jayapura ingin mengingatkan bahwa mobil Anda dengan no polisi " . $user_data['noPolisi'] . " sudah harus diservis.' class='$button_css' role='button'>KIRIM</a></td></tr>";
+                            echo "<td><a href='https://wa.me/" . $noHp . "?text=Halo Sdr/i " . $user_data['nama'] . ", kami dari CV Kombos Toyota Jayapura ingin mengingatkan bahwa mobil Anda dengan no polisi " . $user_data['noPolisi'] . " sudah harus diservis.' class='$button_css' role='button'>KIRIM</a></td>";
+                            echo "<td><a href='booking.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>PESAN</a></tr>";
+                            
                             //<a href='https://wa.me/15551234567?text=I%20am%20interested%20in%20your%20services.%20How%20to%20get%20started%3F'>KIRIM</a>
                         }
                         //echo $diff;
@@ -169,6 +150,7 @@ $date = date("Y-m-d");
                             <th>Due</th>
                             <th>Detail Pelanggan</th>
                             <th>Whatsapp</th>
+                            <th>Booking Servis</th>
                         </tr>
                     <tbody>
                         <?php
@@ -211,7 +193,8 @@ $date = date("Y-m-d");
                             echo "<td>" . $user_data['tglServisSelanjutnya'] . "</td>";
                             echo "<td>" . $user_data['due'] . "Hari</td>";
                             echo "<td><a href='detail.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>LIHAT</a> | <a href='edit.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>EDIT</a></td>";
-                            echo "<td><a href='https://wa.me/" . $noHp . "?text=Halo Sdr/i " . $user_data['nama'] . ", kami dari CV Kombos Toyota Jayapura ingin mengingatkan bahwa mobil Anda dengan no polisi " . $user_data['noPolisi'] . " sudah harus diservis.' class='$button_css' role='button'>KIRIM</a></td></tr>";
+                            echo "<td><a href='https://wa.me/" . $noHp . "?text=Halo Sdr/i " . $user_data['nama'] . ", kami dari CV Kombos Toyota Jayapura ingin mengingatkan bahwa mobil Anda dengan no polisi " . $user_data['noPolisi'] . " sudah harus diservis.' class='$button_css' role='button'>KIRIM</a></td>";
+                            echo "<td><a href='booking.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>SERVIS</a></td></tr>";
                             //<a href='https://wa.me/15551234567?text=I%20am%20interested%20in%20your%20services.%20How%20to%20get%20started%3F'>KIRIM</a>
                         }
                         //echo $diff;
@@ -264,6 +247,7 @@ $date = date("Y-m-d");
                                 <th>Due</th>
                                 <th>Detail Pelanggan</th>
                                 <th>Whatsapp</th>
+                                <th>Booking Servis</th>
                             </tr>
                         <tbody>
                             <?php
@@ -278,14 +262,15 @@ $date = date("Y-m-d");
                                     $highlight_css = "table-warning";
                                     $button_css = "btn btn-info disabled";
                                 }
-                                echo "<tr class = '$highlight_css'>";
+                                echo "< class = '$highlight_css'>";
                                 echo "<td>" . $user_data['nama'] . "</td>";
                                 echo "<td>" . $user_data['noPolisi'] . "</td>";
                                 echo "<td>" . $user_data['tglServisTerakhir'] . "</td>";
                                 echo "<td>" . $user_data['tglServisSelanjutnya'] . "</td>";
                                 echo "<td>" . $user_data['due'] . " Hari</td>";
                                 echo "<td><a href='detail.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>LIHAT</a> | <a href='edit.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>EDIT</a></td>";
-                                echo "<td><a href='https://wa.me/" . $noHp . "?text=Halo Sdr/i " . $user_data['nama'] . ", kami dari CV Kombos Toyota Jayapura ingin mengingatkan bahwa mobil Anda dengan no polisi " . $user_data['noPolisi'] . " sudah harus diservis.' class='$button_css' role='button'>KIRIM</a></td></tr>";
+                                echo "<td><a href='https://wa.me/" . $noHp . "?text=Halo Sdr/i " . $user_data['nama'] . ", kami dari CV Kombos Toyota Jayapura ingin mengingatkan bahwa mobil Anda dengan no polisi " . $user_data['noPolisi'] . " sudah harus diservis.' class='$button_css' role='button'>KIRIM</a></td>";
+                                echo "<td><a href='booking.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>PESAN</a></td></tr>";
                                 //<a href='https://wa.me/15551234567?text=I%20am%20interested%20in%20your%20services.%20How%20to%20get%20started%3F'>KIRIM</a>
                             }
                             ?>
