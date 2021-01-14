@@ -16,10 +16,18 @@ $res2 = mysqli_query(
     ORDER BY tglServisSelanjutnya ASC"
 );
 
+$book_data = mysqli_query(
+    $conn, 
+    "select noRangka, tanggalServis 
+    from riwayat 
+    where status = 2"
+);
+
 date_default_timezone_set('Asia/Jayapura');
 
 $arr = mysqli_fetch_all ($result, MYSQLI_ASSOC);
 $arr2 = mysqli_fetch_all ($res2, MYSQLI_ASSOC);
+$arr3 = mysqli_fetch_all ($book_data, MYSQLI_ASSOC);
 
 $date = date("Y-m-d");
 ?>
@@ -34,18 +42,19 @@ $date = date("Y-m-d");
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="style.css">
-    <?php include 'header.php'; ?>
+    <?php 
+    include 'header.php'; 
+    include "navbar.php";
+    ?>
 </head>
 
 <body>
     <!-- Check Data -->
     <!-- <pre>
     <?php
-    print_r($arr2);
+    print_r($arr3);
     ?>
     </pre> -->
-
-    <?php include "navbar.php"?>
 
     <div class="container mt-4">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -78,6 +87,8 @@ $date = date("Y-m-d");
                             <th>Tanggal Servis Terakhir</th>
                             <th>Tanggal Servis Selanjutnya</th>
                             <th>Due</th>
+                            <th>Booking Date</th>
+                            <th>Servis</th>
                             <th>Detail Pelanggan</th>
                             <th>Whatsapp</th>
                             <th>Booking Servis</th>
@@ -118,9 +129,20 @@ $date = date("Y-m-d");
                             echo "<tr class = '$highlight_css'>";
                             echo "<td>" . $user_data['nama'] . "</td>";
                             echo "<td>" . $user_data['noPolisi'] . "</td>";
-                            echo "<td>" . $user_data['tglServisTerakhir'] . "</td>";
-                            echo "<td>" . $user_data['tglServisSelanjutnya'] . "</td>";
+                            echo "<td class='text-center'>" . $user_data['tglServisTerakhir'] . "</td>";
+                            echo "<td class='text-center'>" . $user_data['tglServisSelanjutnya'] . "</td>";
                             echo "<td>" . $user_data['due'] . " Hari</td>";
+                            
+                            foreach($arr3 as $book){
+                                if($book['noRangka'] == $user_data['noRangka']){
+                                    echo "<td class='text-center'>" . $book['tanggalServis'] . "</td>";
+                                    echo "<td class='text-center'> Book </td>";
+                                }else{
+                                    echo "<td class='text-center'> - </td>";
+                                    echo "<td class='text-center'> No Book </td>";
+                                }
+                            }
+                            
                             echo "<td><a href='detail.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>LIHAT</a> | <a href='edit.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>EDIT</a></td>";
                             echo "<td><a href='https://wa.me/" . $noHp . "?text=Halo Sdr/i " . $user_data['nama'] . ", kami dari CV Kombos Toyota Jayapura ingin mengingatkan bahwa mobil Anda dengan no polisi " . $user_data['noPolisi'] . " sudah harus diservis.' class='$button_css' role='button'>KIRIM</a></td>";
                             echo "<td><a href='booking.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>PESAN</a></tr>";
@@ -142,16 +164,18 @@ $date = date("Y-m-d");
                 <br>
                 <table class="table is-bordered" id="tabel-data2">
                     <thead>
-                        <tr>
-                            <th>Nama Pemilik</th>
-                            <th>No Polisi</th>
-                            <th>Tanggal Servis Terakhir</th>
-                            <th>Tanggal Servis Selanjutnya</th>
-                            <th>Due</th>
-                            <th>Detail Pelanggan</th>
-                            <th>Whatsapp</th>
-                            <th>Booking Servis</th>
-                        </tr>
+                    <tr>
+                        <th>Nama Pemilik</th>
+                        <th>No Polisi</th>
+                        <th>Tanggal Servis Terakhir</th>
+                        <th>Tanggal Servis Selanjutnya</th>
+                        <th>Due</th>
+                        <th>Booking Date</th>
+                        <th>Servis</th>
+                        <th>Detail Pelanggan</th>
+                        <th>Whatsapp</th>
+                        <th>Booking Servis</th>
+                    </tr>
                     <tbody>
                         <?php
                         $noHp = '+6285244449300';
@@ -189,9 +213,20 @@ $date = date("Y-m-d");
                             echo "<tr class = '$highlight_css'>";
                             echo "<td>" . $user_data['nama'] . "</td>";
                             echo "<td>" . $user_data['noPolisi'] . "</td>";
-                            echo "<td>" . $user_data['tglServisTerakhir'] . "</td>";
-                            echo "<td>" . $user_data['tglServisSelanjutnya'] . "</td>";
-                            echo "<td>" . $user_data['due'] . "Hari</td>";
+                            echo "<td class='text-center'>" . $user_data['tglServisTerakhir'] . "</td>";
+                            echo "<td class='text-center'>" . $user_data['tglServisSelanjutnya'] . "</td>";
+                            echo "<td>" . $user_data['due'] . " Hari</td>";
+                            
+                            foreach($arr3 as $book){
+                                if($book['noRangka'] == $user_data['noRangka']){
+                                    echo "<td class='text-center'>" . $book['tanggalServis'] . "</td>";
+                                    echo "<td class='text-center'> Book </td>";
+                                }else{
+                                    echo "<td class='text-center'> - </td>";
+                                    echo "<td class='text-center'> No Book </td>";
+                                }
+                            }
+                            
                             echo "<td><a href='detail.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>LIHAT</a> | <a href='edit.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>EDIT</a></td>";
                             echo "<td><a href='https://wa.me/" . $noHp . "?text=Halo Sdr/i " . $user_data['nama'] . ", kami dari CV Kombos Toyota Jayapura ingin mengingatkan bahwa mobil Anda dengan no polisi " . $user_data['noPolisi'] . " sudah harus diservis.' class='$button_css' role='button'>KIRIM</a></td>";
                             echo "<td><a href='booking.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>SERVIS</a></td></tr>";
@@ -234,25 +269,27 @@ $date = date("Y-m-d");
                             where pelanggan.id = mobil.id and mobil.noRangka = detail_servis.noRangka and TIMESTAMPDIFF(DAY,curdate(),tglServisSelanjutnya) = $id
                             ORDER BY tglServisSelanjutnya ASC"
                         );
-                        $arr3 = mysqli_fetch_all ($result3, MYSQLI_ASSOC);
+                        $arr4 = mysqli_fetch_all ($result3, MYSQLI_ASSOC);
                     ?>
                     <br>
                     <table class="table is-bordered" id="tabel-data3">
                         <thead>
-                            <tr>
-                                <th>Nama Pemilik</th>
-                                <th>No Polisi</th>
-                                <th>Tanggal Servis Terakhir</th>
-                                <th>Tanggal Servis Selanjutnya</th>
-                                <th>Due</th>
-                                <th>Detail Pelanggan</th>
-                                <th>Whatsapp</th>
-                                <th>Booking Servis</th>
-                            </tr>
+                        <tr>
+                            <th>Nama Pemilik</th>
+                            <th>No Polisi</th>
+                            <th>Tanggal Servis Terakhir</th>
+                            <th>Tanggal Servis Selanjutnya</th>
+                            <th>Due</th>
+                            <th>Booking Date</th>
+                            <th>Servis</th>
+                            <th>Detail Pelanggan</th>
+                            <th>Whatsapp</th>
+                            <th>Booking Servis</th>
+                        </tr>
                         <tbody>
                             <?php
                             $noHp = '+6285244449300';
-                            foreach ($arr3 as $user_data) {
+                            foreach ($arr4 as $user_data) {
                                 $highlight_css = "";
                                 $button_css = "btn btn-info";
                                 if ($user_data['due'] >= -3 && $user_data['due'] < 0) {
@@ -262,12 +299,23 @@ $date = date("Y-m-d");
                                     $highlight_css = "table-warning";
                                     $button_css = "btn btn-info disabled";
                                 }
-                                echo "< class = '$highlight_css'>";
+                                echo "<tr class = '$highlight_css'>";
                                 echo "<td>" . $user_data['nama'] . "</td>";
                                 echo "<td>" . $user_data['noPolisi'] . "</td>";
-                                echo "<td>" . $user_data['tglServisTerakhir'] . "</td>";
-                                echo "<td>" . $user_data['tglServisSelanjutnya'] . "</td>";
+                                echo "<td class='text-center'>" . $user_data['tglServisTerakhir'] . "</td>";
+                                echo "<td class='text-center'>" . $user_data['tglServisSelanjutnya'] . "</td>";
                                 echo "<td>" . $user_data['due'] . " Hari</td>";
+                                
+                                foreach($arr3 as $book){
+                                    if($book['noRangka'] == $user_data['noRangka']){
+                                        echo "<td class='text-center'>" . $book['tanggalServis'] . "</td>";
+                                        echo "<td class='text-center'> Book </td>";
+                                    }else{
+                                        echo "<td class='text-center'> - </td>";
+                                        echo "<td class='text-center'> No Book </td>";
+                                    }
+                                }
+                            
                                 echo "<td><a href='detail.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>LIHAT</a> | <a href='edit.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>EDIT</a></td>";
                                 echo "<td><a href='https://wa.me/" . $noHp . "?text=Halo Sdr/i " . $user_data['nama'] . ", kami dari CV Kombos Toyota Jayapura ingin mengingatkan bahwa mobil Anda dengan no polisi " . $user_data['noPolisi'] . " sudah harus diservis.' class='$button_css' role='button'>KIRIM</a></td>";
                                 echo "<td><a href='booking.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>PESAN</a></td></tr>";

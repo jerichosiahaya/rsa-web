@@ -70,4 +70,13 @@ $result = mysqli_query(
 
         </div>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#tabel-data').DataTable({
+                "ordering": false
+            });
+        });
+    </script>
+    
 </body>
