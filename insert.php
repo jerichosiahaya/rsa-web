@@ -1,5 +1,5 @@
 <?php
-include_once("config.php");
+include_once("include/config.php");
 ?>
 <!DOCTYPE html>
 <html>
@@ -10,15 +10,15 @@ include_once("config.php");
     <title>Insert Data</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <?php require 'header.php'; ?>
+    <?php require 'include/header.php'; ?>
 </head>
 
 <body>
-    <?php include '../navbar.php'; ?>
+    <?php include 'include/navbar.php'; ?>
     <div class="container mt-4 mb-4">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+                <li class="breadcrumb-item"><a href="index.php">Beranda</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Tambah</li>
             </ol>
         </nav>
@@ -69,7 +69,6 @@ include_once("config.php");
     </div>
     <script>
         $(document).ready(function() {
-
             // kapitalisasi setiap kata
             function capitalizeFirstLetters(str) {
                 return str.toLowerCase().replace(/^\w|\s\w/g, function(letter) {

@@ -1,5 +1,5 @@
 <?php
-include_once("config.php");
+include_once("include/config.php");
 $nama = $_POST['nama'];
 $alamat = $_POST['alamat'];
 $telepon = $_POST['telepon'];
