@@ -1,9 +1,12 @@
 <?php
-include_once("config.php");
+include_once("include/config.php");
 global $id, $noRangka;
 $id = $_GET['id'];
 $noRangka = $_GET['noRangka'];
-$result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, tglBeli, detail_servis.noRangka, tglServisTerakhir, tglServisSelanjutnya from pelanggan, mobil, detail_servis where pelanggan.id = $id and mobil.noRangka = '$noRangka' and mobil.noRangka = detail_servis.noRangka ORDER BY tglServisSelanjutnya ASC");
+$result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, deliveryDate, detail_servis.noRangka, tglServisTerakhir, tglServisSelanjutnya 
+from pelanggan, mobil, detail_servis 
+where pelanggan.id = $id and mobil.noRangka = '$noRangka' and mobil.noRangka = detail_servis.noRangka 
+ORDER BY tglServisSelanjutnya ASC");
 // update detail_servis set detail_servis.tglServisTerakhir = '2020-12-28', detail_servis.tglServisSelanjutnya = '2021-02-12' where detail_servis.noRangka = '214253MH6975D'
 ?>
 <!DOCTYPE html>
@@ -15,17 +18,18 @@ $result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, tglBeli, 
     <title>Edit Tanggal</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <?php require 'header.php'; ?>
+    <?php require 'include/header.php'; ?>
 </head>
 
 <body>
+<?php require 'include/navbar.php'; ?>
     <?php
     while ($user_data = mysqli_fetch_array($result)) {
         $nama = $user_data['nama'];
         $alamat = $user_data['alamat'];
         $telepon = $user_data['telepon'];
         $noPolisi = $user_data['noPolisi'];
-        $tglBeli = $user_data['tglBeli'];
+        $tglBeli = $user_data['deliveryDate'];
         $tglServisTerakhir = date("d-m-Y", strtotime($user_data['tglServisTerakhir']));
         $tglServisSelanjutnya = date("d-m-Y", strtotime($user_data['tglServisSelanjutnya']));
     }

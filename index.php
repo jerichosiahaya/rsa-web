@@ -122,7 +122,7 @@ require 'query_index.php';
                             ?>
                             <td>
                                 <div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">Function</button>
+                                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">Function</button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <li><a class="dropdown-item" href="detail.php?id=<?php echo $user_data['id']."&noRangka=".$user_data['noRangka']; ?>">Detail</a></li>
                                         <li><a class="dropdown-item" href="edit.php?id=<?php echo $user_data['id']."&noRangka=".$user_data['noRangka']; ?>">Edit</a></li>
