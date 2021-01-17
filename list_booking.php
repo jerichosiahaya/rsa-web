@@ -39,7 +39,7 @@ $arr3 = mysqli_fetch_all($done, MYSQLI_ASSOC);
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.php">Beranda</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Daftar Booking</li>
+                <li class="breadcrumb-item active" aria-current="page">List Booking</li>
             </ol>
         </nav>
         <!-- breadcumb -->
@@ -86,7 +86,7 @@ $arr3 = mysqli_fetch_all($done, MYSQLI_ASSOC);
                             echo "<td>" . $user_data['noPolisi'] . "</td>";
                             echo "<td>" . $user_data['tanggalServis'] . "</td>";
                             echo "<td>" . $user_data['jamBooking'] . "</td>";
-                            echo "<td><i class='fa fa-info-circle' data-bs-toggle='modal' data-bs-target='#myModal'></i> | <i class='fa fa-edit'></i></td>";
+                            echo "<td><i class='fa fa-info-circle' data-bs-toggle='modal' data-bs-target='#myModal'></i> | <a href='update_booking.php?noRangka=$user_data[noRangka]'><i class='fa fa-edit'></i></a></td>";
                         ?>
                             <!-- modal detail -->
                             <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
