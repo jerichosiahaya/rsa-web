@@ -56,21 +56,21 @@ require 'query_index.php';
                 <br>
                 <table class="table is-bordered" id="tabel-data">
                     <thead>
-                        <tr>
-                            <th>Nama Pemilik</th>
-                            <th>Telepon</th>
-                            <th>No Polisi</th>
-                            <th>Tanggal Servis Terakhir</th>
-                            <th>Tanggal Servis Selanjutnya</th>
-                            <th>Due</th>
-                            <th>Booking Date</th>
-                            <th>Servis Done</th>
-                            <th>Booking Servis</th>
-                            <th>Function</th>
-                            <!-- <th>Detail Pelanggan</th>
-                            <th>Whatsapp</th>
-                             -->
-                        </tr>
+                    <tr>
+                        <th>Nama Pemilik</th>
+                        <th>Telepon</th>
+                        <th>No Polisi</th>
+                        <th>Tanggal Servis Terakhir</th>
+                        <th>Tanggal Servis Selanjutnya</th>
+                        <th>Due</th>
+                        <th>Booking Date</th>
+                        <th>Servis Done</th>
+                        <th>Booking Servis</th>
+                        <th>Function</th>
+                        <!-- <th>Detail Pelanggan</th>
+                        <th>Whatsapp</th>
+                            -->
+                    </tr>
                     <tbody>
                         <?php
                         foreach ($arr as $user_data) {

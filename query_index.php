@@ -8,6 +8,14 @@ $incoming = mysqli_query(
     ORDER BY tglServisSelanjutnya ASC"
 );
 
+// $incoming = mysqli_query(
+//     $conn,
+//     "select pelanggan.id, mobil.noRangka, nama, telepon, noPolisi, tglServisTerakhir, tglServisSelanjutnya, TIMESTAMPDIFF(DAY,curdate(),tglServisSelanjutnya) AS due, TIMESTAMPDIFF(DAY,curdate(),riwayat.tanggalServis) < 0 as selisih
+//     from pelanggan, mobil, detail_servis, riwayat
+//     where pelanggan.id = mobil.id and mobil.noRangka = detail_servis.noRangka and mobil.noRangka = riwayat.noRangka and TIMESTAMPDIFF(DAY,curdate(),tglServisSelanjutnya) >= 0 and TIMESTAMPDIFF(DAY,curdate(),riwayat.tanggalServis) >= 0
+//     ORDER BY tglServisSelanjutnya ASC"
+// );
+
 $overdue = mysqli_query(
     $conn,
     "select pelanggan.id, mobil.noRangka, nama, telepon, noPolisi, tglServisTerakhir, tglServisSelanjutnya, TIMESTAMPDIFF(DAY,curdate(),tglServisSelanjutnya) AS due 
@@ -28,3 +36,4 @@ $arr2 = mysqli_fetch_all($overdue, MYSQLI_ASSOC);
 $arr3 = mysqli_fetch_all($book_data, MYSQLI_ASSOC);
 $date = date("Y-m-d");
 $time = date("H:i");
+global $counter;

@@ -4,13 +4,13 @@ $incoming = mysqli_query(
     $conn,
     "select pelanggan.nama, pelanggan.id, pelanggan.telepon, pelanggan.alamat, mobil.noMesin, mobil.id, mobil.noPolisi, riwayat.noRangka, riwayat.tanggalServis, riwayat.namaBooking, riwayat.noTeleponBooking, riwayat.jamBooking, TIMESTAMPDIFF(DAY,curdate(),riwayat.tanggalServis) AS due
     from pelanggan, mobil, riwayat
-    where mobil.noRangka = riwayat.noRangka and mobil.id = pelanggan.id and riwayat.status = 2 and riwayat.done = 0 and TIMESTAMPDIFF(DAY,curdate(),tanggalServis) >= 0 
+    where mobil.noRangka = riwayat.noRangka and mobil.id = pelanggan.id and riwayat.status = 2 and riwayat.done = 0 and TIMESTAMPDIFF(DAY,curdate(),tanggalServis) >= 0
     ORDER BY tanggalServis ASC"
 );
 $overdue = mysqli_query(
     $conn,
     "select noRangka, tanggalServis, namaBooking,  noTeleponBooking, jamBooking, done, TIMESTAMPDIFF(DAY,curdate(),tanggalServis) AS due from riwayat 
-    where status = 2 and TIMESTAMPDIFF(DAY,curdate(),tanggalServis) < 0 
+    where status = 2 and TIMESTAMPDIFF(DAY,curdate(),tanggalServis) < 0 and done = 0
     ORDER BY tanggalServis ASC"
 );
 $done = mysqli_query(
