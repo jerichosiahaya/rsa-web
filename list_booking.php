@@ -2,15 +2,22 @@
 include_once("include/config.php");
 $incoming = mysqli_query(
     $conn,
-    "select pelanggan.nama, pelanggan.id, pelanggan.telepon, pelanggan.alamat, mobil.noMesin, mobil.id, mobil.noPolisi, riwayat.noRangka, riwayat.tanggalServis, riwayat.namaBooking, riwayat.noTeleponBooking, riwayat.jamBooking from pelanggan, mobil, riwayat where mobil.noRangka = riwayat.noRangka and mobil.id = pelanggan.id and riwayat.status = 2 and riwayat.done = 0 ORDER BY tanggalServis ASC"
+    "select pelanggan.nama, pelanggan.id, pelanggan.telepon, pelanggan.alamat, mobil.noMesin, mobil.id, mobil.noPolisi, riwayat.noRangka, riwayat.tanggalServis, riwayat.namaBooking, riwayat.noTeleponBooking, riwayat.jamBooking, TIMESTAMPDIFF(DAY,curdate(),riwayat.tanggalServis) AS due
+    from pelanggan, mobil, riwayat
+    where mobil.noRangka = riwayat.noRangka and mobil.id = pelanggan.id and riwayat.status = 2 and riwayat.done = 0 and TIMESTAMPDIFF(DAY,curdate(),tanggalServis) >= 0 
+    ORDER BY tanggalServis ASC"
 );
 $overdue = mysqli_query(
     $conn,
-    "select noRangka, tanggalServis, namaBooking,  noTeleponBooking, jamBooking, done, TIMESTAMPDIFF(DAY,curdate(),tanggalServis) AS due from riwayat where status = 2 and TIMESTAMPDIFF(DAY,curdate(),tanggalServis) < 0 ORDER BY tanggalServis ASC"
+    "select noRangka, tanggalServis, namaBooking,  noTeleponBooking, jamBooking, done, TIMESTAMPDIFF(DAY,curdate(),tanggalServis) AS due from riwayat 
+    where status = 2 and TIMESTAMPDIFF(DAY,curdate(),tanggalServis) < 0 
+    ORDER BY tanggalServis ASC"
 );
 $done = mysqli_query(
     $conn,
-    "select pelanggan.nama, pelanggan.id, pelanggan.telepon, pelanggan.alamat, mobil.noMesin, mobil.id, mobil.noPolisi, riwayat.noRangka, riwayat.tanggalServis, riwayat.namaBooking, riwayat.noTeleponBooking, riwayat.jamBooking from pelanggan, mobil, riwayat where mobil.noRangka = riwayat.noRangka and mobil.id = pelanggan.id and riwayat.status = 2 and riwayat.done = 1 ORDER BY tanggalServis ASC"
+    "select pelanggan.nama, pelanggan.id, pelanggan.telepon, pelanggan.alamat, mobil.noMesin, mobil.id, mobil.noPolisi, riwayat.noRangka, riwayat.tanggalServis, riwayat.namaBooking, riwayat.noTeleponBooking, riwayat.jamBooking from pelanggan, mobil, riwayat 
+    where mobil.noRangka = riwayat.noRangka and mobil.id = pelanggan.id and riwayat.status = 2 and riwayat.done = 1 
+    ORDER BY tanggalServis ASC"
 );
 date_default_timezone_set('Asia/Jayapura');
 $date = date("Y-m-d");
@@ -33,6 +40,11 @@ $arr3 = mysqli_fetch_all($done, MYSQLI_ASSOC);
 
 <body>
     <?php include 'include/navbar.php'; ?>
+    <!-- <pre>
+    <?php
+    print_r($arr1);
+    ?>
+    </pre> -->
     <div class="container mt-4">
 
         <!-- breadcumb -->
@@ -74,6 +86,8 @@ $arr3 = mysqli_fetch_all($done, MYSQLI_ASSOC);
                             <th>No Polisi</th>
                             <th>Tanggal Servis</th>
                             <th>Jam Booking</th>
+                            <th>Due</th>
+                            <th>Servis Done</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -86,6 +100,8 @@ $arr3 = mysqli_fetch_all($done, MYSQLI_ASSOC);
                             echo "<td>" . $user_data['noPolisi'] . "</td>";
                             echo "<td>" . $user_data['tanggalServis'] . "</td>";
                             echo "<td>" . $user_data['jamBooking'] . "</td>";
+                            echo "<td>" . $user_data['due'] . "</td>";
+                            echo "<td><a href='update_riwayat.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>Submit</a>";
                             echo "<td><i class='fa fa-info-circle' data-bs-toggle='modal' data-bs-target='#myModal" . $user_data['noRangka'] . "'></i> | <a href='update_booking.php?noRangka=$user_data[noRangka]'><i class='fa fa-edit'></i></a></td>";
                         ?>
                             <!-- modal detail -->
@@ -150,7 +166,7 @@ $arr3 = mysqli_fetch_all($done, MYSQLI_ASSOC);
                                 <th>Tanggal Servis</th>
                                 <th>Jam Booking</th>
                                 <th>Nomor Rangka</th>
-                                <th>Status</th>
+                                <th>Due</th>
                             </tr>
                         <tbody>
                             <?php
@@ -161,7 +177,7 @@ $arr3 = mysqli_fetch_all($done, MYSQLI_ASSOC);
                                 echo "<td>" . $user_data['tanggalServis'] . "</td>";
                                 echo "<td>" . $user_data['jamBooking'] . "</td>";
                                 echo "<td>" . $user_data['noRangka'] . "</td>";
-                                echo "<td>" . $user_data['done'] . "</td>";
+                                echo "<td>" . $user_data['due'] . "</td>";
                             }
                             ?>
                         </tbody>
