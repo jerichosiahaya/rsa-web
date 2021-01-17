@@ -86,10 +86,10 @@ $arr3 = mysqli_fetch_all($done, MYSQLI_ASSOC);
                             echo "<td>" . $user_data['noPolisi'] . "</td>";
                             echo "<td>" . $user_data['tanggalServis'] . "</td>";
                             echo "<td>" . $user_data['jamBooking'] . "</td>";
-                            echo "<td><i class='fa fa-info-circle' data-bs-toggle='modal' data-bs-target='#myModal'></i> | <a href='update_booking.php?noRangka=$user_data[noRangka]'><i class='fa fa-edit'></i></a></td>";
+                            echo "<td><i class='fa fa-info-circle' data-bs-toggle='modal' data-bs-target='#myModal" . $user_data['noRangka'] . "'></i> | <a href='update_booking.php?noRangka=$user_data[noRangka]'><i class='fa fa-edit'></i></a></td>";
                         ?>
                             <!-- modal detail -->
-                            <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal fade" id="myModal<?php echo $user_data['noRangka'] ?>" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-scrollable">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -195,10 +195,10 @@ $arr3 = mysqli_fetch_all($done, MYSQLI_ASSOC);
                             echo "<td>" . $user_data['noPolisi'] . "</td>";
                             echo "<td>" . $user_data['tanggalServis'] . "</td>";
                             echo "<td>" . $user_data['jamBooking'] . "</td>";
-                            echo "<td><i class='fa fa-info-circle' data-bs-toggle='modal' data-bs-target='#myModal3'></i></td>";
+                            echo "<td><i class='fa fa-info-circle' data-bs-toggle='modal' data-bs-target='#myModal3" . $user_data['noRangka'] . "'></i></td>";
                         ?>
                             <!-- modal -->
-                            <div class="modal fade" id="myModal3" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal fade" id="myModal3<?php echo $user_data['noRangka'] ?>" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-scrollable">
                                     <div class="modal-content">
                                         <div class="modal-header">
