@@ -97,9 +97,8 @@ $arr2 = mysqli_fetch_all ($result_riwayat_done, MYSQLI_ASSOC);
                             
                                 echo "<tr class = '$highlight_css'>";
                                 echo "<td>" . $user_data['tanggalServis'] . "</td>";
-                                echo "<td>" . $user_data['kilometer'] . "</td>"; 
-                                echo "<td>" . $user_data['idRiwayatBooking'] . "</td>"; 
-                                echo "<td><a data-bs-toggle='modal' data-bs-target='#myModal". $user_data['idRiawayatBooking'] ."' class='btn btn-primary' role='button'>LIHAT</a>";
+                                echo "<td>" . $user_data['kilometer'] . "</td>";
+                                echo "<td><a data-bs-toggle='modal' data-bs-target='#myModal". $user_data['idRiwayatBooking'] ."' class='btn btn-primary' role='button'>LIHAT</a>";
                                 echo "<td>Belum Selesai Servis</td>";
                             ?>
                         <div class="modal fade" id="myModal<?php echo $user_data['idRiwayatBooking'];?>" tabindex="-1"
