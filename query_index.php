@@ -4,23 +4,7 @@ $incoming = mysqli_query(
     $conn,
     "select pelanggan.id, mobil.noRangka, nama, telepon, noPolisi, tglServisTerakhir, tglServisSelanjutnya, TIMESTAMPDIFF(DAY,curdate(),tglServisSelanjutnya) AS due 
     from pelanggan, mobil, detail_servis 
-    where pelanggan.id = mobil.id and mobil.noRangka = detail_servis.noRangka and TIMESTAMPDIFF(DAY,curdate(),tglServisSelanjutnya) >= 0
-    ORDER BY tglServisSelanjutnya ASC"
-);
-
-// $incoming = mysqli_query(
-//     $conn,
-//     "select pelanggan.id, mobil.noRangka, nama, telepon, noPolisi, tglServisTerakhir, tglServisSelanjutnya, TIMESTAMPDIFF(DAY,curdate(),tglServisSelanjutnya) AS due, TIMESTAMPDIFF(DAY,curdate(),riwayat.tanggalServis) < 0 as selisih
-//     from pelanggan, mobil, detail_servis, riwayat
-//     where pelanggan.id = mobil.id and mobil.noRangka = detail_servis.noRangka and mobil.noRangka = riwayat.noRangka and TIMESTAMPDIFF(DAY,curdate(),tglServisSelanjutnya) >= 0 and TIMESTAMPDIFF(DAY,curdate(),riwayat.tanggalServis) >= 0
-//     ORDER BY tglServisSelanjutnya ASC"
-// );
-
-$overdue = mysqli_query(
-    $conn,
-    "select pelanggan.id, mobil.noRangka, nama, telepon, noPolisi, tglServisTerakhir, tglServisSelanjutnya, TIMESTAMPDIFF(DAY,curdate(),tglServisSelanjutnya) AS due 
-    from pelanggan, mobil, detail_servis 
-    where pelanggan.id = mobil.id and mobil.noRangka = detail_servis.noRangka and TIMESTAMPDIFF(DAY,curdate(),tglServisSelanjutnya) < 0
+    where pelanggan.id = mobil.id and mobil.noRangka = detail_servis.noRangka
     ORDER BY tglServisSelanjutnya ASC"
 );
 
@@ -32,8 +16,51 @@ $book_data = mysqli_query(
 );
 date_default_timezone_set('Asia/Jayapura');
 $arr = mysqli_fetch_all($incoming, MYSQLI_ASSOC);
-$arr2 = mysqli_fetch_all($overdue, MYSQLI_ASSOC);
 $arr3 = mysqli_fetch_all($book_data, MYSQLI_ASSOC);
 $date = date("Y-m-d");
 $time = date("H:i");
 global $counter;
+
+$data;
+$n = 0;
+
+foreach($arr as $x){
+    $spec = $n;
+    foreach($arr3 as $y){
+        if($x['noRangka'] == $y['noRangka']){
+            $date1 = date_create($date);
+            $date2 = date_create($y['tanggalServis']);
+            $diff = date_diff($date1, $date2)->format("%r%a");
+            $data[$n] = array(
+                'id' => $x['id'],
+                'noRangka' => $x['noRangka'],
+                'nama' => $x['nama'],
+                'telepon' => $x['telepon'],
+                'noPolisi' => $x['noPolisi'],
+                'tglServisTerakhir' => $x['tglServisTerakhir'],
+                'tglServisSelanjutnya' => $x['tglServisSelanjutnya'],
+                'due' => $diff,
+                'Booking' => $y['tanggalServis']
+            );
+            
+            $n++;
+        }
+    }
+
+    if($spec == $n){
+        $data[$n] = array(
+            'id' => $x['id'],
+            'noRangka' => $x['noRangka'],
+            'nama' => $x['nama'],
+            'telepon' => $x['telepon'],
+            'noPolisi' => $x['noPolisi'],
+            'tglServisTerakhir' => $x['tglServisTerakhir'],
+            'tglServisSelanjutnya' => $x['tglServisSelanjutnya'],
+            'due' => $x['due'],
+            'Booking' => "-"
+        );
+        $n++;
+    }
+}
+
+

@@ -21,7 +21,8 @@ require 'query_index.php';
     <!-- Check Data -->
     <!-- <pre>
     <?php
-    print_r($arr3);
+    // print_r($arr);
+    // print_r($data);
     ?>
     </pre> -->
 
@@ -73,71 +74,51 @@ require 'query_index.php';
                     </tr>
                     <tbody>
                         <?php
-                        foreach ($arr as $user_data) {
-                            // update tanggal servis selanjutnya
-                            $today = new DateTime('now');
-                            $next = (clone $today)->modify('+6 month');
-                            // atur warna row
-                            $highlight_css = "";
-                            $button_css = "btn btn-info";
-                            if ($user_data['due'] >= -3 && $user_data['due'] < 0) {
-                                $highlight_css = "table-danger";
-                                $button_css = "btn btn-danger";
-                            } elseif ($user_data['due'] == 0) {
-                                $highlight_css = "table-warning";
-                                $button_css = "btn btn-info disabled";
-                            }
-                            // munculin data dalam row
-                            echo "<tr class = '$highlight_css'>";
-                            echo "<td>" . $user_data['nama'] . "</td>";
-                            echo "<td>" . $user_data['telepon'] . "</td>";
-                            echo "<td>" . $user_data['noPolisi'] . "</td>";
-                            echo "<td class='text-center'>" . $user_data['tglServisTerakhir'] . "</td>";
-                            echo "<td class='text-center'>" . $user_data['tglServisSelanjutnya'] . "</td>";
-                            echo "<td>" . $user_data['due'] . " Hari</td>";
-                            // cek data booking
-                            if (empty($arr3)) {
-                                echo "<td class='text-center'> - </td>";
-                                //echo "<td class='text-center'><input type='button' name='submit' class='btn btn-primary' value='Submit' id='submit' data-bs-toggle='modal' data-bs-target='#modal1" . $user_data['noRangka'] . "'></td>";
-                                echo "<td><a href='insert_riwayat.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>Submit</a>";
-                            } else {
-                                $counter = 0;
-                                foreach ($arr3 as $book) {
-                                    if ($book['noRangka'] == $user_data['noRangka']) {
-                                        echo "<td class='text-center'>" . $book['tanggalServis'] . "</td>";
-                                        //echo "<td class='text-center'><input type='button' name='submit' class='btn btn-primary' value='Submit' id='" . $user_data['noRangka'] . "' data-bs-toggle='modal' data-bs-target='#modal2" . $user_data['noRangka'] . "'></td>";
-                                        echo "<td><a href='update_riwayat.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>Submit</a>";
-                                        $counter++;
-                                    }
+                        foreach ($data as $user_data) {
+                            if($user_data['due'] >= 0){
+                                // update tanggal servis selanjutnya
+                                $today = new DateTime('now');
+                                $next = (clone $today)->modify('+6 month');
+                                // atur warna row
+                                $highlight_css = "";
+                                $button_css = "btn btn-info";
+                                if ($user_data['due'] >= -3 && $user_data['due'] < 0) {
+                                    $highlight_css = "table-danger";
+                                    $button_css = "btn btn-danger";
+                                } elseif ($user_data['due'] == 0) {
+                                    $highlight_css = "table-warning";
+                                    $button_css = "btn btn-info disabled";
                                 }
-                                if($counter == 0){
-                                    echo "<td class='text-center'> - </td>";
-                                    //echo "<td class='text-center'><input type='button' name='submit' class='btn btn-primary' value='Submit' id='" . $user_data['noRangka'] . "' data-bs-toggle='modal' data-bs-target='#modal1" . $user_data['noRangka'] . "'></td>";
+                                // munculin data dalam row
+                                echo "<tr class = '$highlight_css'>";
+                                echo "<td>" . $user_data['nama'] . "</td>";
+                                echo "<td>" . $user_data['telepon'] . "</td>";
+                                echo "<td>" . $user_data['noPolisi'] . "</td>";
+                                echo "<td class='text-center'>" . $user_data['tglServisTerakhir'] . "</td>";
+                                echo "<td class='text-center'>" . $user_data['tglServisSelanjutnya'] . "</td>";
+                                echo "<td>" . $user_data['due'] . " Hari</td>";
+                                echo "<td>" . $user_data['Booking'] . "</td>";
+                                if($user_data['Booking'] == "-"){
                                     echo "<td><a href='insert_riwayat.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>Submit</a>";
+                                    echo "<td><a href='booking.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>Booking</a></td>";
+                                }else{
+                                    echo "<td><a href='update_riwayat.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>Submit</a>";
+                                    echo "<td><a href='update_booking.php?noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>Booking</a></td>";
                                 }
+                                ?>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">Function</button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <li><a class="dropdown-item" href="detail.php?id=<?php echo $user_data['id']."&noRangka=".$user_data['noRangka']; ?>">Detail</a></li>
+                                            <li><a class="dropdown-item" href="edit.php?id=<?php echo $user_data['id']."&noRangka=".$user_data['noRangka']; ?>">Edit</a></li>
+                                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php
                             }
-                            // echo "<td><a href='detail.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>LIHAT</a> | <a href='edit.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>EDIT</a></td>";
-                            // echo "<td><a href='https://wa.me/" . $user_data['telepon'] . "?text=Halo Sdr/i " . $user_data['nama'] . ", kami dari CV Kombos Toyota Jayapura ingin mengingatkan bahwa mobil Anda dengan no polisi " . $user_data['noPolisi'] . " sudah harus diservis.' class='$button_css' role='button'>KIRIM</a></td>";
-                            
-                            if($counter == 0){
-                                echo "<td><a href='booking.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>Booking</a></td>";
-                            }else{
-                                echo "<td><a href='update_booking.php?noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>Booking</a></td>";
-                            }
-                            
-                            ?>
-                            <td>
-                                <div class="dropdown">
-                                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">Function</button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <li><a class="dropdown-item" href="detail.php?id=<?php echo $user_data['id']."&noRangka=".$user_data['noRangka']; ?>">Detail</a></li>
-                                        <li><a class="dropdown-item" href="edit.php?id=<?php echo $user_data['id']."&noRangka=".$user_data['noRangka']; ?>">Edit</a></li>
-                                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        <?php
                         }
                         ?>
                     </tbody>
@@ -168,71 +149,51 @@ require 'query_index.php';
                 </tr>
                 <tbody>
                     <?php
-                    foreach ($arr2 as $user_data) {
-                        // update tanggal servis selanjutnya
-                        $today = new DateTime('now');
-                        $next = (clone $today)->modify('+6 month');
-                        // atur warna row
-                        $highlight_css = "";
-                        $button_css = "btn btn-info";
-                        if ($user_data['due'] >= -3 && $user_data['due'] < 0) {
-                            $highlight_css = "table-danger";
-                            $button_css = "btn btn-danger";
-                        } elseif ($user_data['due'] == 0) {
-                            $highlight_css = "table-warning";
-                            $button_css = "btn btn-info disabled";
-                        }
-                        // munculin data dalam row
-                        echo "<tr class = '$highlight_css'>";
-                        echo "<td>" . $user_data['nama'] . "</td>";
-                        echo "<td>" . $user_data['telepon'] . "</td>";
-                        echo "<td>" . $user_data['noPolisi'] . "</td>";
-                        echo "<td class='text-center'>" . $user_data['tglServisTerakhir'] . "</td>";
-                        echo "<td class='text-center'>" . $user_data['tglServisSelanjutnya'] . "</td>";
-                        echo "<td>" . $user_data['due'] . " Hari</td>";
-                        // cek data booking
-                        if (empty($arr3)) {
-                            echo "<td class='text-center'> - </td>";
-                            //echo "<td class='text-center'><input type='button' name='submit' class='btn btn-primary' value='Submit' id='submit' data-bs-toggle='modal' data-bs-target='#modal1" . $user_data['noRangka'] . "'></td>";
-                            echo "<td><a href='insert_riwayat.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>Submit</a>";
-                        } else {
-                            $counter = 0;
-                            foreach ($arr3 as $book) {
-                                if ($book['noRangka'] == $user_data['noRangka']) {
-                                    echo "<td class='text-center'>" . $book['tanggalServis'] . "</td>";
-                                    //echo "<td class='text-center'><input type='button' name='submit' class='btn btn-primary' value='Submit' id='" . $user_data['noRangka'] . "' data-bs-toggle='modal' data-bs-target='#modal2" . $user_data['noRangka'] . "'></td>";
-                                    echo "<td><a href='update_riwayat.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>Submit</a>";
-                                    $counter++;
-                                }
+                    foreach ($data as $user_data) {
+                        if($user_data['due'] < 0){
+                            // update tanggal servis selanjutnya
+                            $today = new DateTime('now');
+                            $next = (clone $today)->modify('+6 month');
+                            // atur warna row
+                            $highlight_css = "";
+                            $button_css = "btn btn-info";
+                            if ($user_data['due'] >= -3 && $user_data['due'] < 0) {
+                                $highlight_css = "table-danger";
+                                $button_css = "btn btn-danger";
+                            } elseif ($user_data['due'] == 0) {
+                                $highlight_css = "table-warning";
+                                $button_css = "btn btn-info disabled";
                             }
-                            if($counter == 0){
-                                echo "<td class='text-center'> - </td>";
-                                //echo "<td class='text-center'><input type='button' name='submit' class='btn btn-primary' value='Submit' id='" . $user_data['noRangka'] . "' data-bs-toggle='modal' data-bs-target='#modal1" . $user_data['noRangka'] . "'></td>";
+                            // munculin data dalam row
+                            echo "<tr class = '$highlight_css'>";
+                            echo "<td>" . $user_data['nama'] . "</td>";
+                            echo "<td>" . $user_data['telepon'] . "</td>";
+                            echo "<td>" . $user_data['noPolisi'] . "</td>";
+                            echo "<td class='text-center'>" . $user_data['tglServisTerakhir'] . "</td>";
+                            echo "<td class='text-center'>" . $user_data['tglServisSelanjutnya'] . "</td>";
+                            echo "<td>" . $user_data['due'] . " Hari</td>";
+                            echo "<td>" . $user_data['Booking'] . "</td>";
+                            if($user_data['Booking'] == "-"){
                                 echo "<td><a href='insert_riwayat.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>Submit</a>";
+                                echo "<td><a href='booking.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>Booking</a></td>";
+                            }else{
+                                echo "<td><a href='update_riwayat.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>Submit</a>";
+                                echo "<td><a href='update_booking.php?noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>Booking</a></td>";
                             }
+                            ?>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">Function</button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <li><a class="dropdown-item" href="detail.php?id=<?php echo $user_data['id']."&noRangka=".$user_data['noRangka']; ?>">Detail</a></li>
+                                        <li><a class="dropdown-item" href="edit.php?id=<?php echo $user_data['id']."&noRangka=".$user_data['noRangka']; ?>">Edit</a></li>
+                                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php
                         }
-                        // echo "<td><a href='detail.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>LIHAT</a> | <a href='edit.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>EDIT</a></td>";
-                        // echo "<td><a href='https://wa.me/" . $user_data['telepon'] . "?text=Halo Sdr/i " . $user_data['nama'] . ", kami dari CV Kombos Toyota Jayapura ingin mengingatkan bahwa mobil Anda dengan no polisi " . $user_data['noPolisi'] . " sudah harus diservis.' class='$button_css' role='button'>KIRIM</a></td>";
-                        
-                        if($counter == 0){
-                            echo "<td><a href='booking.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>Booking</a></td>";
-                        }else{
-                            echo "<td><a href='update_booking.php?noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>Booking</a></td>";
-                        }
-                        
-                        ?>
-                        <td>
-                            <div class="dropdown">
-                                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">Function</button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <li><a class="dropdown-item" href="detail.php?id=<?php echo $user_data['id']."&noRangka=".$user_data['noRangka']; ?>">Detail</a></li>
-                                    <li><a class="dropdown-item" href="edit.php?id=<?php echo $user_data['id']."&noRangka=".$user_data['noRangka']; ?>">Edit</a></li>
-                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                    <?php
                     }
                     ?>
                 </tbody>
@@ -263,100 +224,72 @@ require 'query_index.php';
                 if (isset($_POST['submit'])) {
                     //echo("Days: " . $_POST['days'] . "<br>");
                     $id = $_POST['days'];
-                    $result3 = mysqli_query(
-                        $conn,
-                        "select pelanggan.id, mobil.noRangka, nama, telepon, noPolisi, tglServisTerakhir, tglServisSelanjutnya, TIMESTAMPDIFF(DAY,curdate(),tglServisSelanjutnya) AS due 
-                        from pelanggan, mobil, detail_servis 
-                        where pelanggan.id = mobil.id and mobil.noRangka = detail_servis.noRangka and TIMESTAMPDIFF(DAY,curdate(),tglServisSelanjutnya) = $id
-                        ORDER BY tglServisSelanjutnya ASC"
-                    );
-                    $arr4 = mysqli_fetch_all($result3, MYSQLI_ASSOC);
                 ?>
                     <br>
                     <table class="table is-bordered" id="tabel-data3">
                         <thead>
-                            <tr>
-                                <th>Nama Pemilik</th>
-                                <th>Telepon</th>
-                                <th>No Polisi</th>
-                                <th>Tanggal Servis Terakhir</th>
-                                <th>Tanggal Servis Selanjutnya</th>
-                                <th>Due</th>
-                                <th>Booking Date</th>
-                                <th>Servis Done</th>
-                                <th>Booking Servis</th>
-                                <th>Function</th>
-                                <!-- <th>Detail Pelanggan</th>
-                                <th>Whatsapp</th>
+                        <tr>
+                            <th>Nama Pemilik</th>
+                            <th>Telepon</th>
+                            <th>No Polisi</th>
+                            <th>Tanggal Servis Terakhir</th>
+                            <th>Tanggal Servis Selanjutnya</th>
+                            <th>Due</th>
+                            <th>Booking Date</th>
+                            <th>Servis Done</th>
+                            <th>Booking Servis</th>
+                            <th>Function</th>
+                            <!-- <th>Detail Pelanggan</th>
+                            <th>Whatsapp</th>
                                 -->
-                            </tr>
+                        </tr>
                         <tbody>
                             <?php
-                            foreach ($arr4 as $user_data) {
-                                // update tanggal servis selanjutnya
-                                $today = new DateTime('now');
-                                $next = (clone $today)->modify('+6 month');
-                                // atur warna row
-                                $highlight_css = "";
-                                $button_css = "btn btn-info";
-                                if ($user_data['due'] >= -3 && $user_data['due'] < 0) {
-                                    $highlight_css = "table-danger";
-                                    $button_css = "btn btn-danger";
-                                } elseif ($user_data['due'] == 0) {
-                                    $highlight_css = "table-warning";
-                                    $button_css = "btn btn-info disabled";
-                                }
-                                // munculin data dalam row
-                                echo "<tr class = '$highlight_css'>";
-                                echo "<td>" . $user_data['nama'] . "</td>";
-                                echo "<td>" . $user_data['telepon'] . "</td>";
-                                echo "<td>" . $user_data['noPolisi'] . "</td>";
-                                echo "<td class='text-center'>" . $user_data['tglServisTerakhir'] . "</td>";
-                                echo "<td class='text-center'>" . $user_data['tglServisSelanjutnya'] . "</td>";
-                                echo "<td>" . $user_data['due'] . " Hari</td>";
-                                // cek data booking
-                                if (empty($arr3)) {
-                                    echo "<td class='text-center'> - </td>";
-                                    //echo "<td class='text-center'><input type='button' name='submit' class='btn btn-primary' value='Submit' id='submit' data-bs-toggle='modal' data-bs-target='#modal1" . $user_data['noRangka'] . "'></td>";
-                                    echo "<td><a href='insert_riwayat.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>Submit</a>";
-                                } else {
-                                    $counter = 0;
-                                    foreach ($arr3 as $book) {
-                                        if ($book['noRangka'] == $user_data['noRangka']) {
-                                            echo "<td class='text-center'>" . $book['tanggalServis'] . "</td>";
-                                            //echo "<td class='text-center'><input type='button' name='submit' class='btn btn-primary' value='Submit' id='" . $user_data['noRangka'] . "' data-bs-toggle='modal' data-bs-target='#modal2" . $user_data['noRangka'] . "'></td>";
-                                            echo "<td><a href='update_riwayat.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>Submit</a>";
-                                            $counter++;
-                                        }
+                            foreach ($data as $user_data) {
+                                if($user_data['due'] == $id){
+                                    // update tanggal servis selanjutnya
+                                    $today = new DateTime('now');
+                                    $next = (clone $today)->modify('+6 month');
+                                    // atur warna row
+                                    $highlight_css = "";
+                                    $button_css = "btn btn-info";
+                                    if ($user_data['due'] >= -3 && $user_data['due'] < 0) {
+                                        $highlight_css = "table-danger";
+                                        $button_css = "btn btn-danger";
+                                    } elseif ($user_data['due'] == 0) {
+                                        $highlight_css = "table-warning";
+                                        $button_css = "btn btn-info disabled";
                                     }
-                                    if($counter == 0){
-                                        echo "<td class='text-center'> - </td>";
-                                        //echo "<td class='text-center'><input type='button' name='submit' class='btn btn-primary' value='Submit' id='" . $user_data['noRangka'] . "' data-bs-toggle='modal' data-bs-target='#modal1" . $user_data['noRangka'] . "'></td>";
+                                    // munculin data dalam row
+                                    echo "<tr class = '$highlight_css'>";
+                                    echo "<td>" . $user_data['nama'] . "</td>";
+                                    echo "<td>" . $user_data['telepon'] . "</td>";
+                                    echo "<td>" . $user_data['noPolisi'] . "</td>";
+                                    echo "<td class='text-center'>" . $user_data['tglServisTerakhir'] . "</td>";
+                                    echo "<td class='text-center'>" . $user_data['tglServisSelanjutnya'] . "</td>";
+                                    echo "<td>" . $user_data['due'] . " Hari</td>";
+                                    echo "<td>" . $user_data['Booking'] . "</td>";
+                                    if($user_data['Booking'] == "-"){
                                         echo "<td><a href='insert_riwayat.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>Submit</a>";
+                                        echo "<td><a href='booking.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>Booking</a></td>";
+                                    }else{
+                                        echo "<td><a href='update_riwayat.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>Submit</a>";
+                                        echo "<td><a href='update_booking.php?noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>Booking</a></td>";
                                     }
+                                    ?>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">Function</button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <li><a class="dropdown-item" href="detail.php?id=<?php echo $user_data['id']."&noRangka=".$user_data['noRangka']; ?>">Detail</a></li>
+                                                <li><a class="dropdown-item" href="edit.php?id=<?php echo $user_data['id']."&noRangka=".$user_data['noRangka']; ?>">Edit</a></li>
+                                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php
                                 }
-                                // echo "<td><a href='detail.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>LIHAT</a> | <a href='edit.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>EDIT</a></td>";
-                                // echo "<td><a href='https://wa.me/" . $user_data['telepon'] . "?text=Halo Sdr/i " . $user_data['nama'] . ", kami dari CV Kombos Toyota Jayapura ingin mengingatkan bahwa mobil Anda dengan no polisi " . $user_data['noPolisi'] . " sudah harus diservis.' class='$button_css' role='button'>KIRIM</a></td>";
-                                
-                                if($counter == 0){
-                                    echo "<td><a href='booking.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>Booking</a></td>";
-                                }else{
-                                    echo "<td><a href='update_booking.php?noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>Booking</a></td>";
-                                }
-                                
-                                ?>
-                                <td>
-                                    <div class="dropdown">
-                                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">Function</button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <li><a class="dropdown-item" href="detail.php?id=<?php echo $user_data['id']."&noRangka=".$user_data['noRangka']; ?>">Detail</a></li>
-                                            <li><a class="dropdown-item" href="edit.php?id=<?php echo $user_data['id']."&noRangka=".$user_data['noRangka']; ?>">Edit</a></li>
-                                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                            <?php
                             }
                             ?>
                         </tbody>
