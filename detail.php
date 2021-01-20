@@ -3,7 +3,7 @@ include_once("include/config.php");
 global $id, $noRangka;
 $id = $_GET['id'];
 $noRangka = $_GET['noRangka'];
-$result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, deliveryDate, detail_servis.noRangka, detail_servis.kilometer, tglServisTerakhir, tglServisSelanjutnya from pelanggan, mobil, detail_servis where pelanggan.id = $id and mobil.noRangka = '$noRangka' and mobil.noRangka = detail_servis.noRangka ORDER BY tglServisSelanjutnya ASC");
+$result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, noMesin, deliveryDate, detail_servis.noRangka, detail_servis.kilometer, tglServisTerakhir, tglServisSelanjutnya from pelanggan, mobil, detail_servis where pelanggan.id = $id and mobil.noRangka = '$noRangka' and mobil.noRangka = detail_servis.noRangka ORDER BY tglServisSelanjutnya ASC");
 
 
 ?>
@@ -29,6 +29,7 @@ $result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, deliveryD
             $alamat = $user_data['alamat'];
             $telepon = $user_data['telepon'];
             $noPolisi = $user_data['noPolisi'];
+            $noMesin = $user_data['noMesin'];
             $tglBeli = $user_data['deliveryDate'];
             $tglServisTerakhir = $user_data['tglServisTerakhir'];
             $tglServisSelanjutnya = $user_data['tglServisSelanjutnya'];
@@ -80,39 +81,92 @@ $result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, deliveryD
             <input type="button" name="edit" class="btn btn-primary" value="Edit" id="edit">
             <input type="button" name="simpan" class="btn btn-primary" value="Simpan" id="simpan" disabled>
         </form>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <h3 class="mt-4">Data Mobil</h3>
+                    <form class="form-floating mt-2">
+                        <input type="text" class="form-control" id="noPolisi" value="<?php echo $noPolisi ?>" disabled>
+                        <label for="floatingInputValue">No Polisi</label>
+                    </form>
+                    <form class="form-floating mt-2">
+                        <input type="text" class="form-control" id="noRangka" value="<?php echo $noRangka ?>" disabled>
+                        <label for="floatingInputValue">No Rangka</label>
+                    </form>
+                    <form class="form-floating mt-2">
+                        <input type="text" class="form-control" id="noMesin" value="<?php echo $noMesin ?>" disabled>
+                        <label for="floatingInputValue">No Mesin</label>
+                    </form>
+                    <form class="form-floating mt-2">
+                        <input type="text" class="form-control" id="deliveryDate" value="<?php echo $tglBeli ?>"
+                            disabled>
+                        <label for="floatingInputValue">Tanggal Beli</label>
+                    </form>
+                    <form class="form-floating mt-2">
+                        <input type="text" class="form-control" id="floatingInputValue"
+                            value="<?php echo $tglServisTerakhir ?>" disabled>
+                        <label for="floatingInputValue">Servis Terakhir</label>
+                    </form>
+                    <form class="form-floating mt-2">
+                        <input type="text" class="form-control" id="floatingInputValue"
+                            value="<?php echo $tglServisSelanjutnya ?>" disabled>
+                        <label for="floatingInputValue">Servis Selanjutnya</label>
+                    </form>
+                    <form class="form-floating mt-2 mb-4">
+                        <input type="text" class="form-control" id="floatingInputValue" value="<?php echo $kilometer ?>"
+                            disabled>
+                        <label for="floatingInputValue">Kilometer</label>
+                    </form>
 
-        <h3 class="mt-4">Data Mobil</h3>
-        <form class="form-floating mt-2">
-            <input type="text" class="form-control" id="floatingInputValue" value="<?php echo $noPolisi ?>" disabled>
-            <label for="floatingInputValue">No Polisi</label>
-        </form>
-        <form class="form-floating mt-2">
-            <input type="text" class="form-control" id="floatingInputValue" value="<?php echo $noRangka ?>" disabled>
-            <label for="floatingInputValue">No Rangka</label>
-        </form>
-        <form class="form-floating mt-2">
-            <input type="text" class="form-control" id="floatingInputValue" value="<?php echo $tglBeli ?>" disabled>
-            <label for="floatingInputValue">Tanggal Beli</label>
-        </form>
-        <form class="form-floating mt-2">
-            <input type="text" class="form-control" id="floatingInputValue" value="<?php echo $tglServisTerakhir ?>"
-                disabled>
-            <label for="floatingInputValue">Servis Terakhir</label>
-        </form>
-        <form class="form-floating mt-2">
-            <input type="text" class="form-control" id="floatingInputValue" value="<?php echo $tglServisSelanjutnya ?>"
-                disabled>
-            <label for="floatingInputValue">Servis Selanjutnya</label>
-        </form>
-        <form class="form-floating mt-2 mb-4">
-            <input type="text" class="form-control" id="floatingInputValue" value="<?php echo $kilometer ?>" disabled>
-            <label for="floatingInputValue">Kilometer</label>
-        </form>
+                    <input type="button" name="editmobil" class="btn btn-primary" value="Edit No Polisi" id="editmobil">
+                    <input type="button" name="simpanmobil" class="btn btn-primary" value="Simpan" id="simpanmobil"
+                        disabled>
+                </div>
 
-        <?php
-        echo "<a href='riwayat_servis.php?id=$id&noRangka=$noRangka' class='btn btn-success float-right' role='button' >Lihat Riwayat Servis</a>"
-        ?>
+               
+                <div class="col-sm">
+                    <h3 class="mt-4">Interval Servis</h3>
 
+                    <table class="table is-bordered" id="tabel-data1">
+                        <thead>
+                            <tr>
+                                <th>Kilometer</th>
+                                <th>Tanggal Servis</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                                $noHp = '+6285244449300';
+                                foreach ($result as $user_data) {
+                                
+                                    $highlight_css = "";
+                                    $button_css = "btn btn-info";
+                           
+                                    $dateNow = new DateTime($tglServisTerakhir);
+                                    $nextService2 = (clone $dateNow);
+                                    for ($i = 0; $i < 10; $i++) {
+
+                                      
+                                        $nextService = (clone $nextService2)->modify('+6 month');
+                                        echo "<tr class = '$highlight_css'>";
+                                        echo "<td>" . $user_data['kilometer'] . " KM</td>";
+                                        echo "<td>" . $nextService->format('Y-m-d') . "</td>";
+                                        $nextService2 = (clone $nextService);
+                                        $user_data['kilometer'] += 10000;
+
+                                            if($user_data['kilometer'] > 100000){
+                                                $user_data['kilometer'] = 10000;
+                                            }
+                                    }
+                                }
+                                ?>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+            <?php echo "<div class='col mt-4'><a href='riwayat_servis.php?id=$id&noRangka=$noRangka' class='btn btn-success float-right' role='button' >Lihat Riwayat Servis</a></div>"?>
+        </div>
 
 
 
@@ -141,12 +195,7 @@ $result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, deliveryD
             </ul>
         </div> -->
     </div>
-    <div id="wrap">
-        <div id="main" class="container clear-top">
-            <p style="text-align: center;"><i>Reminder Servis Application (RSA) - Version 1.0.0 Beta</i></p>
-        </div>
-    </div>
-    <footer class="footer"></footer>
+
     <script>
         $(document).ready(function () {
             $('#edit').on('click', function () {
@@ -155,6 +204,7 @@ $result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, deliveryD
                 $("#telepon").removeAttr("disabled");
                 $("#simpan").removeAttr("disabled");
             });
+
             $('#simpan').on('click', function () {
                 $("#nama").attr("disabled", "disabled");
                 $("#alamat").attr("disabled", "disabled");
@@ -200,6 +250,55 @@ $result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, deliveryD
                     alert('Please fill all the field !');
                     //$("#butsave").removeAttr("disabled");
                 }
+            });
+
+            $('#editmobil').on('click', function () {
+                $("#noPolisi").removeAttr("disabled");
+                $("#simpanmobil").removeAttr("disabled");
+            });
+
+            $('#simpanmobil').on('click', function () {
+                $("#noPolisi").attr("disabled", "disabled");
+                var noRangka = '<?php echo $noRangka ?>';
+                var noMesin = $('#noMesin').val();
+                var noPolisi = $('#noPolisi').val();
+                var deliveryDate = $('#deliveryDate').val();
+                var id = '<?php echo $id ?>';
+
+                if (noRangka != "" & noMesin != "" && noPolisi != "" && deliveryDate != "") {
+                    $.ajax({
+                        type: "POST",
+                        url: "detail_edit_mobil_proses.php",
+                        //dataType: 'json',
+                        data: {
+                            'noRangka': noRangka,
+                            'noMesin': noMesin,
+                            'noPolisi': noPolisi,
+                            'deliveryDate': deliveryDate,
+                            'id': id
+
+                        },
+                        cache: false,
+                        success: function (dataResult) {
+                            var dataResult = JSON.parse(dataResult);
+                            if (dataResult.statusCode == 200) {
+                                $("#butsave").removeAttr("disabled");
+                                //$('#fupForm').find('input:text').val('');
+                                //$("#success").show();
+                                //$('#success').html('Data added successfully !');
+                                alert("Success!");
+                                location.reload();
+                            } else if (dataResult.statusCode == 201) {
+                                alert("Error occured !");
+                            }
+
+                        }
+                    });
+                } else {
+                    alert('Please fill all the field !');
+                    //$("#butsave").removeAttr("disabled");
+                }
+
             });
         });
     </script>
