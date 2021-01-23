@@ -51,14 +51,14 @@ $result = mysqli_query($conn, "select * from riwayat where riwayat.noRangka = '$
                     <input class="form-control form-insert" type="text" id="noTeleponBooking" name="noTeleponBooking" value="<?php echo $noTeleponBooking; ?>" disabled>
 
                     <div class="alert alert-warning mt-4" role="alert">
-                        Ubah tanggal atau jam booking
+                        Ubah tanggal atau jam servis.
                     </div>
 
-                    <label for="tanggalServis">Tanggal Booking:</label><br>
-                    <input class="form-control form-insert" type="date" id="tanggalServis" name="tanggalServis">
+                    <label for="tanggalServis">Tanggal Servis:</label><br>
+                    <input class="form-control form-insert" type="date" id="tanggalServis" name="tanggalServis" value="<?php echo $tanggalServis; ?>">
 
-                    <label for="jamBooking">Jam Booking</label><br>
-                    <input class="form-control form-insert" type="time" id="jamBooking" name="jamBooking">
+                    <label for="jamBooking">Jam Servis</label><br>
+                    <input class="form-control form-insert" type="time" id="jamBooking" name="jamBooking" value="<?php echo $jamBooking; ?>">
 
                     <input type="button" name="submit" class="btn btn-primary" value="Submit" id="submit" data-bs-toggle="modal" data-bs-target="#exampleModal">
 

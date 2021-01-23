@@ -1,5 +1,5 @@
 <?php
-include_once("config.php");
+include_once("include/config.php");
 
 $noRangka = $_POST['noRangka'];
 $noMesin = $_POST['noMesin'];

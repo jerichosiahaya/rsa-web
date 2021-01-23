@@ -4,7 +4,7 @@ global $id, $noRangka;
 $date = date("Y-m-d");
 $id = $_GET['id'];
 $noRangka = $_GET['noRangka'];
-$result = mysqli_query($conn, "select noPolisi, deliveryDate, detail_servis.noRangka, tglServisTerakhir, tglServisSelanjutnya from pelanggan, 
+$result = mysqli_query($conn, "select nama, telepon, alamat, noPolisi, deliveryDate, detail_servis.noRangka, tglServisTerakhir, tglServisSelanjutnya from pelanggan, 
 mobil, detail_servis where pelanggan.id = $id and mobil.noRangka = '$noRangka' and mobil.noRangka = detail_servis.noRangka ORDER BY tglServisSelanjutnya ASC");
 ?>
 <!DOCTYPE html>
@@ -23,6 +23,7 @@ mobil, detail_servis where pelanggan.id = $id and mobil.noRangka = '$noRangka' a
 
 <body>
     <?php include 'include/navbar.php'; ?>
+
     <div class="container mt-4 mb-4">
         <?php
         while ($user_data = mysqli_fetch_array($result)) {
@@ -31,14 +32,15 @@ mobil, detail_servis where pelanggan.id = $id and mobil.noRangka = '$noRangka' a
             $deliveryDate = $user_data['deliveryDate'];
             $tglServisTerakhir = $user_data['tglServisTerakhir'];
             $tglServisSelanjutnya = $user_data['tglServisSelanjutnya'];
-
+            $nama = $user_data['nama'];
+            $telepon = $user_data['telepon'];
+            $alamat = $user_data['alamat'];
             // due date
             $diff = abs(strtotime($tglServisTerakhir) - strtotime($tglServisSelanjutnya));
             $years = floor($diff / (365 * 60 * 60 * 24));
             $months = floor(($diff - $years * 365 * 60 * 60 * 24) / (30 * 60 * 60 * 24));
             $days = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24) / (60 * 60 * 24));
             //printf("%d years, %d months, %d days\n", $years, $months, $days);
-
             $date1 = date_create($tglServisTerakhir);
             $date2 = date_create($tglServisSelanjutnya);
             $diff = date_diff($date1, $date2);
@@ -55,62 +57,84 @@ mobil, detail_servis where pelanggan.id = $id and mobil.noRangka = '$noRangka' a
 
 
         <div class="container">
-
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Nama</strong> dan <strong>No Telepon</strong> booking (pemesan) bisa berbeda dari data pemilik kendaraan. Jika <strong>Nama</strong> dan
+                <strong>No Telepon</strong> pemesan sama dengan data pemilik kendaraan, maka langsung input <strong>Tanggal Servis</strong> dan <strong>Jam Servis</strong> yang dibooking oleh pelanggan.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
             <div class="col-sm mt-4">
+                <div class="row">
+                    <div class="col">
+                        <h5>Data Booking </h5>
+                        <form action="" id="fupForm" name="form1" method="post">
+                            <input class="form-control form-insert" type="text" id="namaBooking" name="namaBooking" value="<?php echo $nama ?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Input nama booking (pemesan)">
+                            <input class="form-control form-insert" type="text" id="noTeleponBooking" name="noTeleponBooking" value="<?php echo $telepon ?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Input no telepon booking (pemesan)">
 
+                            <label for="tglBeli">Tanggal Servis:</label><br>
+                            <input class="form-control form-insert" type="date" id="tanggalServis" name="tanggalServis" required>
 
-                <h5>Data Booking </h5>
-                <form action="" id="fupForm" name="form1" method="post">
-                    <input class="form-control form-insert" type="text" id="namaBooking" name="namaBooking" placeholder="Nama">
-                    <input class="form-control form-insert" type="text" id="noTeleponBooking" name="noTeleponBooking" placeholder="Telepon (Contoh: +6281381669200)">
+                            <label for="tglBeli">Jam Servis</label><br>
+                            <input class="form-control form-insert" type="time" id="jamBooking" name="jamBooking" required>
 
-                    <label for="tglBeli">Tanggal Booking:</label><br>
-                    <input class="form-control form-insert" type="date" id="tanggalServis" name="tanggalServis">
+                            <input type="button" name="submit" class="btn btn-primary" value="Submit" id="submit" data-bs-toggle="modal" data-bs-target="#exampleModal">
 
-                    <label for="tglBeli">Jam Booking</label><br>
-                    <input class="form-control form-insert" type="time" id="jamBooking" name="jamBooking">
-
-                    <input type="button" name="submit" class="btn btn-primary" value="Submit" id="submit" data-bs-toggle="modal" data-bs-target="#exampleModal">
-
-                    <!-- Modal sebelum submit -->
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-body">
-                                    Apakah data sudah benar?
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tidak</button>
-                                    <button type="button" class="btn btn-primary" name="servis" id="servis">Ya</button>
+                            <!-- Modal sebelum submit -->
+                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            Apakah data sudah benar?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tidak</button>
+                                            <button type="button" class="btn btn-primary" name="servis" id="servis">Ya</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                            <!-- Modal sebelum submit -->
+                        </form>
                     </div>
-                    <!-- Modal sebelum submit -->
-                </form>
-                <br>
+                    <div class="col">
+                        <h5>Data Pemilik</h5>
+                        <form class="form-floating mt-2 col">
+                            <input type="text" class="form-control" id="namaPemilik" value="<?php echo $nama ?>" disabled>
+                            <label for="namaPemilik">Nama Pemilik</label>
+                        </form>
+                        <form class="form-floating mt-2 col">
+                            <input type="text" class="form-control" id="teleponPemilik" value="<?php echo $telepon ?>" disabled>
+                            <label for="teleponPemilik">Telepon</label>
+                        </form>
+                        <form class="form-floating mt-2 col">
+                            <input type="text" class="form-control" id="alamatPemilik" value="<?php echo $alamat ?>" disabled>
+                            <label for="alamatPemilik">Alamat</label>
+                        </form>
+                    </div>
+                </div>
+
+                <hr>
                 <h5>Data Mobil</h5>
-                <form class="form-floating mt-2 col-sm-8">
+                <form class="form-floating mt-2 col">
                     <input type="text" class="form-control" id="floatingInputValue" value="<?php echo $noPolisi ?>" disabled>
                     <label for="floatingInputValue">No Polisi</label>
                 </form>
-                <form class="form-floating mt-2 col-sm-8">
+                <form class="form-floating mt-2 col">
                     <input type="text" class="form-control" id="noRangka" value="<?php echo $noRangka ?>" disabled>
                     <label for="floatingInputValue">No Rangka</label>
                 </form>
-                <form class="form-floating mt-2 col-sm-8">
+                <form class="form-floating mt-2 col">
                     <input type="text" class="form-control" id="floatingInputValue" value="<?php echo $deliveryDate ?>" disabled>
                     <label for="floatingInputValue">Tanggal Beli</label>
                 </form>
-                <form class="form-floating mt-2 col-sm-8">
+                <form class="form-floating mt-2 col">
                     <input type="text" class="form-control" id="floatingInputValue" value="<?php echo $tglServisTerakhir ?>" disabled>
                     <label for="floatingInputValue">Servis Terakhir</label>
                 </form>
-                <form class="form-floating mt-2 col-sm-8">
+                <form class="form-floating mt-2 col">
                     <input type="text" class="form-control" id="floatingInputValue" value="<?php echo $tglServisSelanjutnya ?>" disabled>
                     <label for="floatingInputValue">Servis Selanjutnya</label>
                 </form>
-                <form class="form-floating mt-2 col-sm-8">
+                <form class="form-floating mt-2 col">
                     <input type="text" class="form-control" id="floatingInputValue" value="<?php echo $diff->format("%R%a hari ");
                                                                                             printf("(%d bulan, %d hari)", $months, $days); ?>" disabled>
                     <label for="floatingInputValue">Due</label>
@@ -126,6 +150,17 @@ mobil, detail_servis where pelanggan.id = $id and mobil.noRangka = '$noRangka' a
     </div>
     <script>
         $(document).ready(function() {
+            $('#namaBooking').focus();
+            var today = moment().format('YYYY-MM-DD');
+            $('#tanggalServis').on('change', function() {
+                var tglServis = $('#tanggalServis').val();
+                if (tglServis <= today) {
+                    alert('Tanggal booking tidak valid');
+                    $("#tanggalServis").val("")
+                    $("#tanggalServis").focus();
+                };
+            });
+
             function capitalizeFirstLetters(str) {
                 return str.toLowerCase().replace(/^\w|\s\w/g, function(letter) {
                     return letter.toUpperCase();
@@ -145,7 +180,6 @@ mobil, detail_servis where pelanggan.id = $id and mobil.noRangka = '$noRangka' a
                 vMax: '9999999999999',
                 vMin: '-999999999'
             });
-
 
             $('#servis').on('click', function() {
                 var namaBooking = $('#namaBooking').val();

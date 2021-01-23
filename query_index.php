@@ -24,10 +24,10 @@ global $counter;
 $data;
 $n = 0;
 
-foreach($arr as $x){
+foreach ($arr as $x) {
     $spec = $n;
-    foreach($arr3 as $y){
-        if($x['noRangka'] == $y['noRangka']){
+    foreach ($arr3 as $y) {
+        if ($x['noRangka'] == $y['noRangka']) {
             $date1 = date_create($date);
             $date2 = date_create($y['tanggalServis']);
             $diff = date_diff($date1, $date2)->format("%r%a");
@@ -42,12 +42,11 @@ foreach($arr as $x){
                 'due' => $diff,
                 'Booking' => $y['tanggalServis']
             );
-            
             $n++;
         }
     }
 
-    if($spec == $n){
+    if ($spec == $n) {
         $data[$n] = array(
             'id' => $x['id'],
             'noRangka' => $x['noRangka'],
@@ -62,5 +61,3 @@ foreach($arr as $x){
         $n++;
     }
 }
-
-

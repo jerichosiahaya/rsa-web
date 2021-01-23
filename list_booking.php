@@ -9,8 +9,9 @@ $incoming = mysqli_query(
 );
 $overdue = mysqli_query(
     $conn,
-    "select noRangka, tanggalServis, namaBooking,  noTeleponBooking, jamBooking, done, TIMESTAMPDIFF(DAY,curdate(),tanggalServis) AS due from riwayat 
-    where status = 2 and TIMESTAMPDIFF(DAY,curdate(),tanggalServis) < 0 and done = 0
+    "select pelanggan.nama, pelanggan.id, pelanggan.telepon, pelanggan.alamat, mobil.noMesin, mobil.id, mobil.noPolisi, riwayat.noRangka, riwayat.tanggalServis, riwayat.namaBooking, riwayat.noTeleponBooking, riwayat.jamBooking, TIMESTAMPDIFF(DAY,curdate(),riwayat.tanggalServis) AS due
+    from pelanggan, mobil, riwayat
+    where mobil.noRangka = riwayat.noRangka and mobil.id = pelanggan.id and riwayat.status = 2 and riwayat.done = 0 and TIMESTAMPDIFF(DAY,curdate(),tanggalServis) < 0
     ORDER BY tanggalServis ASC"
 );
 $done = mysqli_query(
@@ -31,7 +32,7 @@ $arr3 = mysqli_fetch_all($done, MYSQLI_ASSOC);
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Daftar Booking | Reminder Servis Berkala</title>
+    <title>List Booking | RSA</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php include 'include/header.php'; ?>
@@ -78,14 +79,14 @@ $arr3 = mysqli_fetch_all($done, MYSQLI_ASSOC);
             <!-- incoming content -->
             <div class="tab-pane fade show active" id="incoming" role="tabpanel" aria-labelledby="incoming-tab">
                 <br>
-                <table class="table is-bordered tableData" id="tabel-data">
+                <table class="table is-bordered table-hover tableData" id="tabel-data">
                     <thead>
                         <tr>
                             <th>Nama Pemesan</th>
                             <th>Telepon Pemesan</th>
                             <th>No Polisi</th>
                             <th>Tanggal Servis</th>
-                            <th>Jam Booking</th>
+                            <th>Jam Servis</th>
                             <th>Due</th>
                             <th>Servis Done</th>
                             <th></th>
@@ -158,15 +159,17 @@ $arr3 = mysqli_fetch_all($done, MYSQLI_ASSOC);
                 <?php
                 } else {
                 ?>
-                    <table class="table is-bordered tableData" id="tabel-data2">
+                    <table class="table is-bordered table-hover tableData" id="tabel-data2">
                         <thead>
                             <tr>
                                 <th>Nama Pemesan</th>
-                                <th>No Telepon</th>
+                                <th>Telepon Pemesan</th>
+                                <th>No Polisi</th>
                                 <th>Tanggal Servis</th>
-                                <th>Jam Booking</th>
-                                <th>Nomor Rangka</th>
+                                <th>Jam Servis</th>
                                 <th>Due</th>
+                                <th>Servis Done</th>
+                                <th></th>
                             </tr>
                         <tbody>
                             <?php
@@ -174,10 +177,48 @@ $arr3 = mysqli_fetch_all($done, MYSQLI_ASSOC);
                                 echo "<tr>";
                                 echo "<td>" . $user_data['namaBooking'] . "</td>";
                                 echo "<td>" . $user_data['noTeleponBooking'] . "</td>";
+                                echo "<td>" . $user_data['noPolisi'] . "</td>";
                                 echo "<td>" . $user_data['tanggalServis'] . "</td>";
                                 echo "<td>" . $user_data['jamBooking'] . "</td>";
-                                echo "<td>" . $user_data['noRangka'] . "</td>";
                                 echo "<td>" . $user_data['due'] . "</td>";
+                                echo "<td><a href='update_riwayat.php?id=$user_data[id]&noRangka=$user_data[noRangka]' class='btn btn-primary' role='button'>Submit</a>";
+                                echo "<td><i class='fa fa-info-circle' data-bs-toggle='modal' data-bs-target='#myModaloverdue" . $user_data['noRangka'] . "'></i> | <a href='update_booking.php?noRangka=$user_data[noRangka]'><i class='fa fa-edit'></i></a></td>";
+                            ?>
+                                <!-- modal detail -->
+                                <div class="modal fade" id="myModaloverdue<?php echo $user_data['noRangka'] ?>" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-scrollable">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="myModalLabel">Detail Kendaraan</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="alert alert-warning" role="alert">
+                                                    Data pemilik dan pemesan (<i>booking</i>) bisa berbeda <a href="index.php" target="_blank"><i class='fa fa-question-circle'></i></a>
+                                                </div>
+                                                <hr>
+                                                <small class="text-muted">Nama Pemilik:</small>
+                                                <input class="form-control form-insert mb-2" type="text" id="nama" name="nama" value="<?php echo $user_data['nama']; ?>" disabled>
+                                                <small class="text-muted">Telepon Pemilik:</small>
+                                                <input class="form-control form-insert mb-2" type="text" id="telepon" name="telepon" value="<?php echo $user_data['telepon']; ?>" disabled>
+                                                <small class="text-muted">Alamat Pemilik:</small>
+                                                <input class="form-control form-insert mb-2" type="text" id="alamat" name="alamat" value="<?php echo $user_data['alamat']; ?>" disabled>
+                                                <small class="text-muted">No Polisi:</small>
+                                                <input class="form-control form-insert mb-2" type="text" id="noPolisi" name="noPolisi" value="<?php echo $user_data['noPolisi']; ?>" disabled>
+                                                <small class="text-muted">No Rangka (VIN):</small>
+                                                <input class="form-control form-insert mb-2" type="text" id="noRangka" name="noRangka" value="<?php echo $user_data['noRangka']; ?>" disabled>
+                                                <small class="text-muted">No Mesin:</small>
+                                                <input class="form-control form-insert mb-2" type="text" id="noMesin" name="noMesin" value="<?php echo $user_data['noMesin']; ?>" disabled>
+                                                <?php echo "<a href='riwayat_servis.php?id=$user_data[id]&noRangka=$user_data[noRangka]' target='_blank' rel='noopener noreferrer'><button type='button' class='btn btn-outline-dark btn-sm mt-3'>Lihat riwayat servis >></button></a>"; ?>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end modal detail -->
+                            <?php
                             }
                             ?>
                         </tbody>
@@ -191,14 +232,14 @@ $arr3 = mysqli_fetch_all($done, MYSQLI_ASSOC);
             <!-- done content -->
             <div class="tab-pane fade" id="done" role="tabpanel" aria-labelledby="done-tab">
                 <br>
-                <table class="table is-bordered tableData" id="tabel-data">
+                <table class="table is-bordered table-hover tableData" id="tabel-data">
                     <thead>
                         <tr>
                             <th>Nama Pemesan</th>
                             <th>Telepon Pemesan</th>
                             <th>No Polisi</th>
                             <th>Tanggal Servis</th>
-                            <th>Jam Booking</th>
+                            <th>Jam Servis</th>
                             <th></th>
                         </tr>
                     </thead>

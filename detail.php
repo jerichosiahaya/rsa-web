@@ -14,7 +14,7 @@ $result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, noMesin, 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title></title>
+    <title>Detail: <?php echo $noRangka ?> | RSA</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php include 'include/header.php'; ?>
@@ -49,7 +49,7 @@ $result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, noMesin, 
             //update pelanggan set nama  = 'Jehuda Siahaya', alamat = 'Jln. Yabansai, No 3 Perumnas 1 Waena' where id = 1
         }
 
-       
+
 
         ?>
         <nav aria-label="breadcrumb">
@@ -98,32 +98,27 @@ $result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, noMesin, 
                         <label for="floatingInputValue">No Mesin</label>
                     </form>
                     <form class="form-floating mt-2">
-                        <input type="text" class="form-control" id="deliveryDate" value="<?php echo $tglBeli ?>"
-                            disabled>
+                        <input type="text" class="form-control" id="deliveryDate" value="<?php echo $tglBeli ?>" disabled>
                         <label for="floatingInputValue">Tanggal Beli</label>
                     </form>
                     <form class="form-floating mt-2">
-                        <input type="text" class="form-control" id="floatingInputValue"
-                            value="<?php echo $tglServisTerakhir ?>" disabled>
+                        <input type="text" class="form-control" id="floatingInputValue" value="<?php echo $tglServisTerakhir ?>" disabled>
                         <label for="floatingInputValue">Servis Terakhir</label>
                     </form>
                     <form class="form-floating mt-2">
-                        <input type="text" class="form-control" id="floatingInputValue"
-                            value="<?php echo $tglServisSelanjutnya ?>" disabled>
+                        <input type="text" class="form-control" id="floatingInputValue" value="<?php echo $tglServisSelanjutnya ?>" disabled>
                         <label for="floatingInputValue">Servis Selanjutnya</label>
                     </form>
                     <form class="form-floating mt-2 mb-4">
-                        <input type="text" class="form-control" id="floatingInputValue" value="<?php echo $kilometer ?>"
-                            disabled>
+                        <input type="text" class="form-control" id="floatingInputValue" value="<?php echo $kilometer ?>" disabled>
                         <label for="floatingInputValue">Kilometer</label>
                     </form>
 
                     <input type="button" name="editmobil" class="btn btn-primary" value="Edit No Polisi" id="editmobil">
-                    <input type="button" name="simpanmobil" class="btn btn-primary" value="Simpan" id="simpanmobil"
-                        disabled>
+                    <input type="button" name="simpanmobil" class="btn btn-primary" value="Simpan" id="simpanmobil" disabled>
                 </div>
 
-               
+
                 <div class="col-sm">
                     <h3 class="mt-4">Interval Servis</h3>
 
@@ -136,46 +131,38 @@ $result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, noMesin, 
                         </thead>
                         <tbody>
                             <?php
-                                $noHp = '+6285244449300';
-                                foreach ($result as $user_data) {
-                                
-                                    $highlight_css = "";
-                                    $button_css = "btn btn-info";
-                           
-                                    $dateNow = new DateTime($tglServisTerakhir);
-                                    $nextService2 = (clone $dateNow);
-                                    for ($i = 0; $i < 10; $i++) {
+                            $noHp = '+6285244449300';
+                            foreach ($result as $user_data) {
 
-                                      
-                                        $nextService = (clone $nextService2)->modify('+6 month');
-                                        echo "<tr class = '$highlight_css'>";
-                                        echo "<td>" . $user_data['kilometer'] . " KM</td>";
-                                        echo "<td>" . $nextService->format('Y-m-d') . "</td>";
-                                        $nextService2 = (clone $nextService);
-                                        $user_data['kilometer'] += 10000;
+                                $highlight_css = "";
+                                $button_css = "btn btn-info";
 
-                                            if($user_data['kilometer'] > 100000){
-                                                $user_data['kilometer'] = 10000;
-                                            }
+                                $dateNow = new DateTime($tglServisTerakhir);
+                                $nextService2 = (clone $dateNow);
+                                for ($i = 0; $i < 10; $i++) {
+
+
+                                    $nextService = (clone $nextService2)->modify('+6 month');
+                                    echo "<tr class = '$highlight_css'>";
+                                    echo "<td>" . $user_data['kilometer'] . " KM</td>";
+                                    echo "<td>" . $nextService->format('Y-m-d') . "</td>";
+                                    $nextService2 = (clone $nextService);
+                                    $user_data['kilometer'] += 10000;
+
+                                    if ($user_data['kilometer'] > 100000) {
+                                        $user_data['kilometer'] = 10000;
                                     }
                                 }
-                                ?>
+                            }
+                            ?>
                         </tbody>
                     </table>
 
                 </div>
             </div>
-            <?php echo "<div class='col mt-4'><a href='riwayat_servis.php?id=$id&noRangka=$noRangka' class='btn btn-success float-right' role='button' >Lihat Riwayat Servis</a></div>"?>
+            <?php echo "<div class='col mt-4 mb-4'><a href='riwayat_servis.php?id=$id&noRangka=$noRangka' class='btn btn-success float-right' role='button' >Lihat Riwayat Servis</a></div>" ?>
+
         </div>
-
-
-
-
-
-
-
-
-
         <!-- <h2> No Polisi: <?php echo $noPolisi ?></h2>
         <h2> No Rangka: <?php echo $noRangka ?></h2>
         <h2> Tanggal Beli: <?php echo $tglBeli ?></h2>
@@ -197,15 +184,15 @@ $result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, noMesin, 
     </div>
 
     <script>
-        $(document).ready(function () {
-            $('#edit').on('click', function () {
+        $(document).ready(function() {
+            $('#edit').on('click', function() {
                 $("#nama").removeAttr("disabled");
                 $("#alamat").removeAttr("disabled");
                 $("#telepon").removeAttr("disabled");
                 $("#simpan").removeAttr("disabled");
             });
 
-            $('#simpan').on('click', function () {
+            $('#simpan').on('click', function() {
                 $("#nama").attr("disabled", "disabled");
                 $("#alamat").attr("disabled", "disabled");
                 $("#telepon").attr("disabled", "disabled");
@@ -231,7 +218,7 @@ $result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, noMesin, 
                             'id': id
                         },
                         cache: false,
-                        success: function (dataResult) {
+                        success: function(dataResult) {
                             var dataResult = JSON.parse(dataResult);
                             if (dataResult.statusCode == 200) {
                                 $("#butsave").removeAttr("disabled");
@@ -252,12 +239,12 @@ $result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, noMesin, 
                 }
             });
 
-            $('#editmobil').on('click', function () {
+            $('#editmobil').on('click', function() {
                 $("#noPolisi").removeAttr("disabled");
                 $("#simpanmobil").removeAttr("disabled");
             });
 
-            $('#simpanmobil').on('click', function () {
+            $('#simpanmobil').on('click', function() {
                 $("#noPolisi").attr("disabled", "disabled");
                 var noRangka = '<?php echo $noRangka ?>';
                 var noMesin = $('#noMesin').val();
@@ -279,7 +266,7 @@ $result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, noMesin, 
 
                         },
                         cache: false,
-                        success: function (dataResult) {
+                        success: function(dataResult) {
                             var dataResult = JSON.parse(dataResult);
                             if (dataResult.statusCode == 200) {
                                 $("#butsave").removeAttr("disabled");
