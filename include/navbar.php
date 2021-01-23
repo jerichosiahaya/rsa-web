@@ -7,13 +7,13 @@
             <a class="navbar-brand" href="#">RSA</a>
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="location" href="index.php">Home</a>
+                    <a class="nav-link" aria-current="location" href="index.php">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="list_booking.php" tabindex="-1">List Booking</a>
+                    <a class="nav-link" href="list_booking.php" tabindex="-1">List booking</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#"></a>
+                    <a class="nav-link" href="reporting.php">Reporting</a>
                 </li>
             </ul>
         </div>
