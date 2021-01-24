@@ -135,28 +135,19 @@ $arr2 = mysqli_fetch_all($result_riwayat_done, MYSQLI_ASSOC);
                             <th>Tanggal Servis</th>
                             <th>Kilometer</th>
                             <th>Detail Servis</th>
-                            <th>Status Servis</th>
+                           <!-- <th>Status Servis</th> -->
                         </tr>
                     <tbody>
                         <?php
                         $noHp = '+6285244449300';
                         foreach ($arr2 as $user_data) {
-
-                            $highlight_css = "";
-                            $button_css = "btn btn-info";
-
-                            echo "<tr class = '$highlight_css'>";
-                            echo "<td>" . $user_data['tanggalServis'] . "</td>";
+                            echo "<tr>";
+                            echo "<td>" . date('d-m-Y', strtotime($user_data['tanggalServis'])) . "</td>";
                             echo "<td>" . $user_data['kilometer'] . "</td>";
-
-
-                            echo "<td><a data-bs-toggle='modal' data-bs-target='#myModal2' class='btn btn-primary' role='button'>LIHAT</a>";
-                            echo "<td>" . $user_data['done'] . "</td>";
-                        }
-
-
+                            echo "<td><i class='fa fa-info-circle' data-bs-toggle='modal' data-bs-target='#myModal2" . $user_data['idRiwayatBooking'] . "'></i></td>";
+                            // echo "<td>" . $user_data['done'] . "</td>";
                         ?>
-                        <div class="modal fade" id="myModal2" tabindex="-1" aria-labelledby="myModalLabel2" aria-hidden="true">
+                       <div class="modal fade" id="myModal2<?php echo $user_data['idRiwayatBooking'] ?>" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-scrollable">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -171,9 +162,9 @@ $arr2 = mysqli_fetch_all($result_riwayat_done, MYSQLI_ASSOC);
                                         <small class="text-muted">Tipe Pesanan:</small>
                                         <input class="form-control form-insert mb-2" type="text" id="nama" name="nama" value="<?php
                                                                                                                                 if ($user_data['status'] == 1) {
-                                                                                                                                    echo "Melalui Booking";
+                                                                                                                                    echo "Melalui Booking (scheduled)";
                                                                                                                                 } else {
-                                                                                                                                    echo "Tanpa Booking";
+                                                                                                                                    echo "Tanpa Booking (walk in)";
                                                                                                                                 }; ?>" disabled>
                                         <small class="text-muted">Nama Pemesan:</small>
                                         <input class="form-control form-insert mb-2" type="text" id="nama" name="nama" value="<?php echo $user_data['namaBooking']; ?>" disabled>
@@ -192,9 +183,9 @@ $arr2 = mysqli_fetch_all($result_riwayat_done, MYSQLI_ASSOC);
                                 </div>
                             </div>
                         </div>
-
-
-
+                        <?php
+                        }
+                        ?>
                     </tbody>
                 </table>
             </div>
