@@ -7,7 +7,7 @@ include_once("include/config.php");
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Insert Data</title>
+    <title>Input Baru | RSA</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php require 'include/header.php'; ?>
@@ -32,7 +32,7 @@ include_once("include/config.php");
             <small class="text-muted">Data mobil:</small>
             <input class="form-control form-insert" type="text" id="noPolisi" name="noPolisi" placeholder="No Polisi (Contoh: PA 1963 AU)">
             <input class="form-control form-insert" type="text" id="noMesin" name="noMesin" placeholder="No Mesin">
-            <input class="form-control form-insert" type="text" id="noRangka" name="noRangka" placeholder="VIN">
+            <input class="form-control form-insert" type="text" id="noRangka" name="noRangka" placeholder="No Rangka (VIN)">
             <input class="form-control form-insert" type="text" id="kilometer" name="kilometer" placeholder="Kilometer">
             <!-- Tanggal -->
             <label for="tglBeli">Tanggal Beli:</label><br>
@@ -241,7 +241,7 @@ include_once("include/config.php");
                         }
                     });
                 } else {
-                    alert('Please fill all the field !');
+                    alert('Harap isi semua data!');
                 }
             });
         });
