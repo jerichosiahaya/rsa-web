@@ -2,6 +2,7 @@
 include_once("include/config.php");
 
 $noRangka = $_POST['noRangka'];
+$model = $_POST['model'];
 $noMesin = $_POST['noMesin'];
 $noPolisi = $_POST['noPolisi'];
 $deliveryDate = $_POST['deliveryDate'];
@@ -9,6 +10,7 @@ $id = $_POST['id'];
 
 
 $sql = "update mobil set noMesin = '$noMesin',
+model = '$model',
 noPolisi = '$noPolisi',
 deliveryDate = '$deliveryDate',
 id = '$id'

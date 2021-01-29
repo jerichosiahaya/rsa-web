@@ -31,6 +31,7 @@ include_once("include/config.php");
             <!-- Mobil -->
             <small class="text-muted">Data mobil:</small>
             <input class="form-control form-insert" type="text" id="noPolisi" name="noPolisi" placeholder="No Polisi (Contoh: PA 1963 AU)">
+            <input class="form-control form-insert" type="text" id="model" name="noMesin" placeholder="Model Kendaraan">
             <input class="form-control form-insert" type="text" id="noMesin" name="noMesin" placeholder="No Mesin">
             <input class="form-control form-insert" type="text" id="noRangka" name="noRangka" placeholder="No Rangka (VIN)">
             <input class="form-control form-insert" type="text" id="kilometer" name="kilometer" placeholder="Kilometer">
@@ -166,6 +167,7 @@ include_once("include/config.php");
                 $("#alamat").val("");
                 $("#telepon").val("");
                 $("#noRangka").val("");
+                $("#model").val("");
                 $("#noPolisi").val("");
                 $("#noMesin").val("");
                 $("#tglServisTerakhir").val("");
@@ -188,6 +190,7 @@ include_once("include/config.php");
                 var alamat = $('#alamat').val();
                 var telepon = $('#telepon').val();
                 var noRangka = $('#noRangka').val();
+                var model = $('#model').val();
                 var noPolisi = $('#noPolisi').val();
                 var noMesin = $('#noMesin').val();
                 var kilometer = $('#kilometer').val().replace(/,| KM/g, "");
@@ -208,7 +211,7 @@ include_once("include/config.php");
                     alert(y + z);
                 }
                 */
-                if (nama != "" && alamat != "" && telepon != "" && noRangka != "" && noMesin != "" && noPolisi != "" && tglBeli != "") {
+                if (nama != "" && alamat != "" && telepon != "" && noRangka != ""  && model!="" && noMesin != "" && noPolisi != "" && tglBeli != "") {
                     $.ajax({
                         type: "POST",
                         url: "insert_proses.php",
@@ -217,6 +220,7 @@ include_once("include/config.php");
                             'alamat': alamat,
                             'telepon': telepon,
                             'noRangka': noRangka,
+                            'model': model,
                             'noPolisi': noPolisi,
                             'noMesin': noMesin,
                             'kilometer': kilometer,

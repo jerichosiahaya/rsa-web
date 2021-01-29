@@ -4,7 +4,7 @@ global $id, $noRangka;
 $id = $_GET['id'];
 $noRangka = $_GET['noRangka'];
 $result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, noMesin, deliveryDate, detail_servis.noRangka, detail_servis.kilometer, tglServisTerakhir, tglServisSelanjutnya from pelanggan, mobil, detail_servis where pelanggan.id = $id and mobil.noRangka = '$noRangka' and mobil.noRangka = detail_servis.noRangka ORDER BY tglServisSelanjutnya ASC");
-
+//tambahkan model di dalam query
 
 ?>
 
@@ -29,6 +29,7 @@ $result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, noMesin, 
             $alamat = $user_data['alamat'];
             $telepon = $user_data['telepon'];
             $noPolisi = $user_data['noPolisi'];
+            //$model = $user_data['model'];
             $noMesin = $user_data['noMesin'];
             $tglBeli = $user_data['deliveryDate'];
             $tglServisTerakhir = $user_data['tglServisTerakhir'];
@@ -88,6 +89,10 @@ $result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, noMesin, 
                     <form class="form-floating mt-2">
                         <input type="text" class="form-control" id="noPolisi" value="<?php echo $noPolisi ?>" disabled>
                         <label for="floatingInputValue">No Polisi</label>
+                    </form>
+                    <form class="form-floating mt-2">
+                        <input type="text" class="form-control" id="model" value="<?php echo $model ?>" disabled>
+                        <label for="floatingInputValue">Model Kendaraan</label>
                     </form>
                     <form class="form-floating mt-2">
                         <input type="text" class="form-control" id="noRangka" value="<?php echo $noRangka ?>" disabled>
@@ -248,11 +253,12 @@ $result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, noMesin, 
                 $("#noPolisi").attr("disabled", "disabled");
                 var noRangka = '<?php echo $noRangka ?>';
                 var noMesin = $('#noMesin').val();
+                var model = $('#model').val();
                 var noPolisi = $('#noPolisi').val();
                 var deliveryDate = $('#deliveryDate').val();
                 var id = '<?php echo $id ?>';
 
-                if (noRangka != "" & noMesin != "" && noPolisi != "" && deliveryDate != "") {
+                if (noRangka != "" & noMesin != "" && model != "" && noPolisi != "" && deliveryDate != "") {
                     $.ajax({
                         type: "POST",
                         url: "detail_edit_mobil_proses.php",
@@ -260,6 +266,7 @@ $result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, noMesin, 
                         data: {
                             'noRangka': noRangka,
                             'noMesin': noMesin,
+                            'model' : model,
                             'noPolisi': noPolisi,
                             'deliveryDate': deliveryDate,
                             'id': id

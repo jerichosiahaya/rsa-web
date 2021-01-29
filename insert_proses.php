@@ -5,6 +5,7 @@ $alamat = $_POST['alamat'];
 $telepon = $_POST['telepon'];
 $noRangka = $_POST['noRangka'];
 $noPolisi = $_POST['noPolisi'];
+$model = $_POST['model'];
 $noMesin = $_POST['noMesin'];
 $kilometer = $_POST['kilometer'];
 $tglBeli = $_POST['tglBeli'];
@@ -18,7 +19,7 @@ $check = mysqli_query(
 $id = mysqli_fetch_all($check, MYSQLI_ASSOC);
 
 if (isset($id[0]['id'])) {
-    $sql2 = "insert into mobil (noRangka, noMesin, noPolisi, deliveryDate, id) values ('$noRangka', '$noMesin', '$noPolisi', '$tglBeli', " . $id[0]['id'] . ")";
+    $sql2 = "insert into mobil (noRangka, noMesin, model, noPolisi, deliveryDate, id) values ('$noRangka', '$noMesin', '$model', '$noPolisi', '$tglBeli', " . $id[0]['id'] . ")";
     $sql3 = "insert into detail_servis (idServis, kilometer, tglServisTerakhir, tglServisSelanjutnya, noRangka) values (" . $id[0]['id'] . ", $kilometer,'$tglServisTerakhir', '$tglServisSelanjutnya', '$noRangka')";
     if (mysqli_query($conn, $sql2) && mysqli_query($conn, $sql3)) {
         echo json_encode(array("statusCode" => 200));
@@ -39,7 +40,7 @@ if (isset($id[0]['id'])) {
         "select id from pelanggan where nama = '$nama'"
     );
     $id2 = mysqli_fetch_all($check2, MYSQLI_ASSOC);
-    $sql2 = "insert into mobil (noRangka, noMesin, noPolisi, deliveryDate, id) values ('$noRangka', '$noMesin', '$noPolisi', '$tglBeli', " . $id2[0]['id'] . ")";
+    $sql2 = "insert into mobil (noRangka, noMesin, noPolisi, deliveryDate, id) values ('$noRangka', '$noMesin', '$model', '$noPolisi', '$tglBeli', " . $id2[0]['id'] . ")";
     $sql3 = "insert into detail_servis (idServis, kilometer, tglServisTerakhir, tglServisSelanjutnya, noRangka) values (" . $id2[0]['id'] . ", $kilometer,'$tglServisTerakhir', '$tglServisSelanjutnya', '$noRangka')";
     if (mysqli_query($conn, $sql2) && mysqli_query($conn, $sql3)) {
         echo json_encode(array("statusCode" => 200));
