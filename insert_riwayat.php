@@ -4,7 +4,7 @@ global $id, $noRangka;
 $date = date("Y-m-d");
 $id = $_GET['id'];
 $noRangka = $_GET['noRangka'];
-$result = mysqli_query($conn, "select nama, telepon, noPolisi, detail_servis.noRangka, tglServisTerakhir, tglServisSelanjutnya from pelanggan, 
+$result = mysqli_query($conn, "select nama, telepon, noPolisi, detail_servis.noRangka, tglServisTerakhir, tglServisSelanjutnya, kilometer from pelanggan, 
 mobil, detail_servis where pelanggan.id = $id and mobil.noRangka = '$noRangka' and mobil.noRangka = detail_servis.noRangka ORDER BY tglServisSelanjutnya ASC");
 $arr = mysqli_fetch_array($result, MYSQLI_ASSOC);
 date_default_timezone_set('Asia/Jayapura');
@@ -43,6 +43,7 @@ $time = date("H:i");
             <!-- yang di-dihidden -->
             <input class="form-control form-insert" type="text" id="status" name="status" value="1" hidden>
             <input class="form-control form-insert" type="text" id="done" name="done" value="1" hidden>
+            <input class="form-control form-insert" type="text" id="kilometerPrevious" name="kilometerPrevious" value="<?php echo $arr['kilometer']; ?>" hidden>
             <!-- yang di-disabled -->
             <small class="text-muted">Nama Pemilik:</small>
             <input class="form-control form-insert mb-3" type="text" id="nama" name="nama" value="<?php echo $arr['nama']; ?>" disabled>
@@ -100,6 +101,12 @@ $time = date("H:i");
             $('#kilometer').on('change', function() {
                 a = $('#kilometer').val();
                 b = a.replace(/,| KM/g, "");
+                var kmPrev = $('#kilometerPrevious').val();
+                if (a <= kmPrev) {
+                    alert('Input kilometer tidak valid')
+                    $('#kilometer').val("");
+
+                }
             });
             $('#simpan').on('click', function() {
                 var status = $('#status').val();

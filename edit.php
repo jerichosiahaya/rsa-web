@@ -15,7 +15,7 @@ ORDER BY tglServisSelanjutnya ASC");
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Edit Tanggal</title>
+    <title>Edit Tanggal | RSA Web</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php require 'include/header.php'; ?>
@@ -23,30 +23,38 @@ ORDER BY tglServisSelanjutnya ASC");
 
 <body>
     <?php require 'include/navbar.php'; ?>
-    <?php
-    while ($user_data = mysqli_fetch_array($result)) {
-        $nama = $user_data['nama'];
-        $alamat = $user_data['alamat'];
-        $telepon = $user_data['telepon'];
-        $noPolisi = $user_data['noPolisi'];
-        $tglBeli = $user_data['deliveryDate'];
-        $tglServisTerakhir = date("d-m-Y", strtotime($user_data['tglServisTerakhir']));
-        $tglServisSelanjutnya = date("d-m-Y", strtotime($user_data['tglServisSelanjutnya']));
-    }
-    ?>
+    <div class="container mt-5">
 
-    <form id="fupForm" name="form1" method="post">
-        <label for="fname">Servis terakhir: (<?php echo  $tglServisTerakhir;  ?>)</label><br>
-        <input type="date" id="st" name="st"><br>
-        <label for="lname">Servis selanjutnya: (<?php echo  $tglServisSelanjutnya;  ?>)</label><br>
-        <input type="date" id="sl" name="sl"><br><br>
-        <input type="hidden" id="nr" name="nr" value=" <?php echo $noRangka; ?> ">
-        <input type="button" name="save" class="btn btn-primary" value="Simpan" id="butsave">
-    </form>
+        <?php
+        while ($user_data = mysqli_fetch_array($result)) {
+            $nama = $user_data['nama'];
+            $alamat = $user_data['alamat'];
+            $telepon = $user_data['telepon'];
+            $noPolisi = $user_data['noPolisi'];
+            $tglBeli = $user_data['deliveryDate'];
+            $tglServisTerakhir = date("d-m-Y", strtotime($user_data['tglServisTerakhir']));
+            $tglServisSelanjutnya = date("d-m-Y", strtotime($user_data['tglServisSelanjutnya']));
+        }
+        ?>
 
-    <p><a href="index.php">HOME</a></p>
+        <form id="fupForm" name="form1" method="post">
+            <div class="row">
+                <label for="fname">Servis terakhir: (<?php echo  $tglServisTerakhir;  ?>)</label><br>
+                <div class="col mt-2">
+                    <input type="date" class="form-control" id="st" name="st"><br>
+                </div>
+            </div>
+            <div class="row">
+                <label for="lname">Servis selanjutnya: (<?php echo  $tglServisSelanjutnya;  ?>)</label><br>
+                <div class="col mt-2">
+                    <input type="date" class="form-control" id="sl" name="sl"><br><br>
+                </div>
+            </div>
+            <input type="button" name="save" class="btn btn-primary" value="Simpan" id="butsave">
+            <input type="hidden" id="nr" name="nr" value=" <?php echo $noRangka; ?> ">
+        </form>
 
-
+    </div>
     <script>
         $(document).ready(function() {
             $('#butsave').on('click', function() {
@@ -70,7 +78,7 @@ ORDER BY tglServisSelanjutnya ASC");
                         success: function(dataResult) {
                             var dataResult = JSON.parse(dataResult);
                             if (dataResult.statusCode == 200) {
-                                $("#butsave").removeAttr("disabled");
+                                //$("#butsave").removeAttr("disabled");
                                 //$('#fupForm').find('input:text').val('');
                                 //$("#success").show();
                                 //$('#success').html('Data added successfully !');

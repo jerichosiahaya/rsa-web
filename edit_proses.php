@@ -1,5 +1,5 @@
 <?php
-include_once("config.php");
+include_once("include/config.php");
 //$tglServisTerakhir = date("Y-m-d", strtotime($st));
 //$tglServisSelanjutnya = date("Y-m-d", strtotime($sl));
 $a = $_POST['st'];

@@ -3,7 +3,7 @@ include_once("include/config.php");
 global $id, $noRangka;
 $id = $_GET['id'];
 $noRangka = $_GET['noRangka'];
-$result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, noMesin, deliveryDate, detail_servis.noRangka, detail_servis.kilometer, tglServisTerakhir, tglServisSelanjutnya from pelanggan, mobil, detail_servis where pelanggan.id = $id and mobil.noRangka = '$noRangka' and mobil.noRangka = detail_servis.noRangka ORDER BY tglServisSelanjutnya ASC");
+$result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, noMesin, model, deliveryDate, detail_servis.noRangka, detail_servis.kilometer, tglServisTerakhir, tglServisSelanjutnya from pelanggan, mobil, detail_servis where pelanggan.id = $id and mobil.noRangka = '$noRangka' and mobil.noRangka = detail_servis.noRangka ORDER BY tglServisSelanjutnya ASC");
 //tambahkan model di dalam query
 
 ?>
@@ -29,7 +29,7 @@ $result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, noMesin, 
             $alamat = $user_data['alamat'];
             $telepon = $user_data['telepon'];
             $noPolisi = $user_data['noPolisi'];
-            //$model = $user_data['model'];
+            $model = $user_data['model'];
             $noMesin = $user_data['noMesin'];
             $tglBeli = $user_data['deliveryDate'];
             $tglServisTerakhir = $user_data['tglServisTerakhir'];
@@ -266,7 +266,7 @@ $result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, noMesin, 
                         data: {
                             'noRangka': noRangka,
                             'noMesin': noMesin,
-                            'model' : model,
+                            'model': model,
                             'noPolisi': noPolisi,
                             'deliveryDate': deliveryDate,
                             'id': id

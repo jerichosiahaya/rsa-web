@@ -40,7 +40,7 @@ if (isset($id[0]['id'])) {
         "select id from pelanggan where nama = '$nama'"
     );
     $id2 = mysqli_fetch_all($check2, MYSQLI_ASSOC);
-    $sql2 = "insert into mobil (noRangka, noMesin, noPolisi, deliveryDate, id) values ('$noRangka', '$noMesin', '$model', '$noPolisi', '$tglBeli', " . $id2[0]['id'] . ")";
+    $sql2 = "insert into mobil (noRangka, noMesin, model, noPolisi, deliveryDate, id) values ('$noRangka', '$noMesin', '$model', '$noPolisi', '$tglBeli', " . $id2[0]['id'] . ")";
     $sql3 = "insert into detail_servis (idServis, kilometer, tglServisTerakhir, tglServisSelanjutnya, noRangka) values (" . $id2[0]['id'] . ", $kilometer,'$tglServisTerakhir', '$tglServisSelanjutnya', '$noRangka')";
     if (mysqli_query($conn, $sql2) && mysqli_query($conn, $sql3)) {
         echo json_encode(array("statusCode" => 200));

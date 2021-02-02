@@ -2,7 +2,7 @@
 <?php
 $incoming = mysqli_query(
     $conn,
-    "select pelanggan.id, mobil.noRangka, nama, telepon, noPolisi, tglServisTerakhir, tglServisSelanjutnya, TIMESTAMPDIFF(DAY,curdate(),tglServisSelanjutnya) AS due 
+    "select pelanggan.id, mobil.noRangka, nama, pelanggan.telepon, noPolisi, tglServisTerakhir, tglServisSelanjutnya, TIMESTAMPDIFF(DAY,curdate(),tglServisSelanjutnya) AS due 
     from pelanggan, mobil, detail_servis 
     where pelanggan.id = mobil.id and mobil.noRangka = detail_servis.noRangka
     ORDER BY tglServisSelanjutnya ASC"
