@@ -36,14 +36,14 @@ mobil, detail_servis where pelanggan.id = $id and mobil.noRangka = '$noRangka' a
             $telepon = $user_data['telepon'];
             $alamat = $user_data['alamat'];
             // due date
-            $diff = abs(strtotime($tglServisTerakhir) - strtotime($tglServisSelanjutnya));
+            $diff = abs(strtotime($date) - strtotime($tglServisSelanjutnya));
             $years = floor($diff / (365 * 60 * 60 * 24));
             $months = floor(($diff - $years * 365 * 60 * 60 * 24) / (30 * 60 * 60 * 24));
             $days = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24) / (60 * 60 * 24));
             //printf("%d years, %d months, %d days\n", $years, $months, $days);
-            $date1 = date_create($tglServisTerakhir);
+            $date1 = date_create($date);
             $date2 = date_create($tglServisSelanjutnya);
-            $diff = date_diff($date1, $date2);
+            $diff2 = date_diff($date1, $date2);
             //echo $diff->format("%R%a days");
             //update pelanggan set nama  = 'Jehuda Siahaya', alamat = 'Jln. Yabansai, No 3 Perumnas 1 Waena' where id = 1
         }
@@ -135,7 +135,7 @@ mobil, detail_servis where pelanggan.id = $id and mobil.noRangka = '$noRangka' a
                     <label for="floatingInputValue">Servis Selanjutnya</label>
                 </form>
                 <form class="form-floating mt-2 col">
-                    <input type="text" class="form-control" id="floatingInputValue" value="<?php echo $diff->format("%R%a hari ");
+                    <input type="text" class="form-control" id="floatingInputValue" value="<?php echo $diff2->format("%R%a hari ");
                                                                                             printf("(%d bulan, %d hari)", $months, $days); ?>" disabled>
                     <label for="floatingInputValue">Due</label>
                 </form>

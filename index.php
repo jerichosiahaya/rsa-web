@@ -90,7 +90,7 @@ require 'query_index.php';
                         <tr>
                             <th>Nama Pemilik</th>
                             <th>Telepon</th>
-                            <th>No Polisi</th>
+                            <!-- <th>No Polisi</th> -->
                             <!-- <th>Tanggal Servis Terakhir</th> -->
                             <th>Servis Selanjutnya</th>
                             <th>Due</th>
@@ -123,7 +123,7 @@ require 'query_index.php';
                                 echo "<tr class = '$highlight_css'>";
                                 echo "<td>" . $user_data['nama'] . "</td>";
                                 echo "<td>" . $user_data['telepon'] . "</td>";
-                                echo "<td>" . $user_data['noPolisi'] . "</td>";
+                                // echo "<td>" . $user_data['noPolisi'] . "</td>";
                                 // echo "<td class='text-center'>" . $user_data['tglServisTerakhir'] . "</td>";
                                 echo "<td class='text-center'>" . date('d-m-Y', strtotime($user_data['tglServisSelanjutnya'])) . "</td>";
                                 echo "<td>" . $user_data['due'] . "</td>";
@@ -172,7 +172,7 @@ require 'query_index.php';
                         <tr>
                             <th>Nama Pemilik</th>
                             <th>Telepon</th>
-                            <th>No Polisi</th>
+                            <!-- <th>No Polisi</th> -->
                             <!-- <th>Tanggal Servis Terakhir</th> -->
                             <th>Servis Selanjutnya</th>
                             <th>Due</th>
@@ -205,7 +205,7 @@ require 'query_index.php';
                                 echo "<tr class = '$highlight_css'>";
                                 echo "<td>" . $user_data['nama'] . "</td>";
                                 echo "<td>" . $user_data['telepon'] . "</td>";
-                                echo "<td>" . $user_data['noPolisi'] . "</td>";
+                                // echo "<td>" . $user_data['noPolisi'] . "</td>";
                                 // echo "<td class='text-center'>" . $user_data['tglServisTerakhir'] . "</td>";
                                 echo "<td class='text-center'>" . date('d-m-Y', strtotime($user_data['tglServisSelanjutnya'])) . "</td>";
                                 echo "<td>" . $user_data['due'] . "</td>";
@@ -283,7 +283,7 @@ require 'query_index.php';
                             <tr>
                                 <th>Nama Pemilik</th>
                                 <th>Telepon</th>
-                                <th>No Polisi</th>
+                                <!-- <th>No Polisi</th> -->
                                 <!-- <th>Tanggal Servis Terakhir</th> -->
                                 <th>Tanggal Servis Selanjutnya</th>
                                 <th>Due</th>
@@ -306,7 +306,7 @@ require 'query_index.php';
                                     echo "<tr>";
                                     echo "<td>" . $user_data['nama'] . "</td>";
                                     echo "<td>" . $user_data['telepon'] . "</td>";
-                                    echo "<td>" . $user_data['noPolisi'] . "</td>";
+                                    // echo "<td>" . $user_data['noPolisi'] . "</td>";
                                     // echo "<td class='text-center'>" . $user_data['tglServisTerakhir'] . "</td>";
                                     echo "<td class='text-center'>" . $user_data['tglServisSelanjutnya'] . "</td>";
                                     echo "<td>" . $user_data['due'] . "</td>";
@@ -396,15 +396,22 @@ require 'query_index.php';
             $('#tabel-data').DataTable({
                 "ordering": true,
                 "order": [
-                    [4, 'asc']
+                    [3, 'asc']
                 ],
                 "columnDefs": [{
-                    "targets": [8, 7, 6],
+                    "targets": [7, 6, 5],
                     "orderable": false
                 }]
             });
             $('#tabel-data2').DataTable({
-                "ordering": false
+                "ordering": false,
+                "order": [
+                    [3, 'asc']
+                ],
+                "columnDefs": [{
+                    "targets": [7, 6, 5],
+                    "orderable": false
+                }]
             });
             $('#tabel-data3').DataTable({
                 "ordering": false

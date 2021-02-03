@@ -12,42 +12,48 @@ $tglBeli = $_POST['tglBeli'];
 $tglServisTerakhir = $_POST['tglServisTerakhir'];
 $tglServisSelanjutnya = $_POST['tglServisSelanjutnya'];
 
-$check = mysqli_query(
-    $conn,
-    "select id from pelanggan where nama = '$nama' and telepon = '$telepon'"
-);
-$id = mysqli_fetch_all($check, MYSQLI_ASSOC);
+$check_mobil = mysqli_query($conn, "select noRangka from mobil where noRangka='$noRangka'");
+$ckm = mysqli_fetch_all($check_mobil, MYSQLI_ASSOC);
+if (!isset($ckm[0]['noRangka'])) {
+    $check = mysqli_query(
+        $conn,
+        "select id from pelanggan where nama = '$nama' and telepon = '$telepon'"
+    );
+    $id = mysqli_fetch_all($check, MYSQLI_ASSOC);
 
-if (isset($id[0]['id'])) {
-    $sql2 = "insert into mobil (noRangka, noMesin, model, noPolisi, deliveryDate, id) values ('$noRangka', '$noMesin', '$model', '$noPolisi', '$tglBeli', " . $id[0]['id'] . ")";
-    $sql3 = "insert into detail_servis (idServis, kilometer, tglServisTerakhir, tglServisSelanjutnya, noRangka) values (" . $id[0]['id'] . ", $kilometer,'$tglServisTerakhir', '$tglServisSelanjutnya', '$noRangka')";
-    if (mysqli_query($conn, $sql2) && mysqli_query($conn, $sql3)) {
-        echo json_encode(array("statusCode" => 200));
+
+
+    if (isset($id[0]['id'])) {
+        $sql2 = "insert into mobil (noRangka, noMesin, model, noPolisi, deliveryDate, id) values ('$noRangka', '$noMesin', '$model', '$noPolisi', '$tglBeli', " . $id[0]['id'] . ")";
+        $sql3 = "insert into detail_servis (kilometer, tglServisTerakhir, tglServisSelanjutnya, noRangka) values ($kilometer,'$tglServisTerakhir', '$tglServisSelanjutnya', '$noRangka')";
+        if (mysqli_query($conn, $sql2) && mysqli_query($conn, $sql3)) {
+            echo json_encode(array("statusCode" => 200));
+        } else {
+            echo json_encode(array("statusCode" => 201));
+        }
     } else {
-        echo json_encode(array("statusCode" => 201));
+        $sql1 = "insert into pelanggan (nama, alamat, telepon) values ('$nama', '$alamat', '$telepon')";
+
+        $try = mysqli_query($conn, $sql1);
+
+        $check2 = mysqli_query(
+            $conn,
+            "select id from pelanggan where nama = '$nama'"
+        );
+        $id2 = mysqli_fetch_all($check2, MYSQLI_ASSOC);
+        $sql2 = "insert into mobil (noRangka, noMesin, model, noPolisi, deliveryDate, id) values ('$noRangka', '$noMesin', '$model', '$noPolisi', '$tglBeli', " . $id2[0]['id'] . ")";
+        $sql3 = "insert into detail_servis (kilometer, tglServisTerakhir, tglServisSelanjutnya, noRangka) values ($kilometer,'$tglServisTerakhir', '$tglServisSelanjutnya', '$noRangka')";
+        if (mysqli_query($conn, $sql2) && mysqli_query($conn, $sql3) && $try == 1) {
+            echo json_encode(array("statusCode" => 200));
+        } else {
+            echo json_encode(array("statusCode" => 201));
+        }
     }
 } else {
-    $sql1 = "insert into pelanggan (nama, alamat, telepon) values ('$nama', '$alamat', '$telepon')";
-
-    if (mysqli_query($conn, $sql1)) {
-        echo json_encode(array("statusCode" => 200));
-    } else {
-        echo json_encode(array("statusCode" => 201));
-    }
-
-    $check2 = mysqli_query(
-        $conn,
-        "select id from pelanggan where nama = '$nama'"
-    );
-    $id2 = mysqli_fetch_all($check2, MYSQLI_ASSOC);
-    $sql2 = "insert into mobil (noRangka, noMesin, model, noPolisi, deliveryDate, id) values ('$noRangka', '$noMesin', '$model', '$noPolisi', '$tglBeli', " . $id2[0]['id'] . ")";
-    $sql3 = "insert into detail_servis (idServis, kilometer, tglServisTerakhir, tglServisSelanjutnya, noRangka) values (" . $id2[0]['id'] . ", $kilometer,'$tglServisTerakhir', '$tglServisSelanjutnya', '$noRangka')";
-    if (mysqli_query($conn, $sql2) && mysqli_query($conn, $sql3)) {
-        echo json_encode(array("statusCode" => 200));
-    } else {
-        echo json_encode(array("statusCode" => 201));
-    }
+    echo json_encode(array("statusCode" => 202));
 }
+
+
 
 
 

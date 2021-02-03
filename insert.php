@@ -240,8 +240,9 @@ include_once("include/config.php");
                                 location.reload();
                             } else if (dataResult.statusCode == 201) {
                                 alert("Error occured !");
+                            } else if (dataResult.statusCode == 202) {
+                                alert("No Rangka sudah ada");
                             }
-
                         }
                     });
                 } else {

@@ -123,7 +123,7 @@ $result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, noMesin, 
                     <input type="button" name="simpanmobil" class="btn btn-primary" value="Simpan" id="simpanmobil" disabled>
                 </div>
 
-                
+
                 <div class="col-sm">
                     <h3 class="mt-4">Interval Servis</h3>
                     <?php
@@ -134,46 +134,46 @@ $result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, noMesin, 
                         </div>
                     <?php
                     } else {
-                    ?> 
-                    <table class="table is-bordered" id="tabel-data1">
-                        <thead>
-                            <tr>
-                                <th>Kilometer</th>
-                                <th>Tanggal Servis</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $noHp = '+6285244449300';
-                            foreach ($result as $user_data) {
+                    ?>
+                        <table class="table is-bordered" id="tabel-data1">
+                            <thead>
+                                <tr>
+                                    <th>Kilometer</th>
+                                    <th>Tanggal Servis</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $noHp = '+6285244449300';
+                                foreach ($result as $user_data) {
 
-                                $highlight_css = "";
-                                $button_css = "btn btn-info";
+                                    $highlight_css = "";
+                                    $button_css = "btn btn-info";
 
-                                $dateNow = new DateTime($tglServisTerakhir);
-                                $nextService2 = (clone $dateNow);
-                                for ($i = 0; $i < 10; $i++) {
-                                
-                                    echo "<tr class = '$highlight_css'>";
-                                    echo "<td>" . $user_data['kilometer'] . " KM</td>";
-                                    echo "<td>" . $nextService2->format('Y-m-d') . "</td>";
-                                    
-                                    $nextService = (clone $nextService2)->modify('+6 month');
-                                    $nextService2 = (clone $nextService);
-                                    $user_data['kilometer'] += 10000;
+                                    $dateNow = new DateTime($tglServisTerakhir);
+                                    $nextService2 = (clone $dateNow);
+                                    for ($i = 0; $i < 10; $i++) {
 
-                                    if ($user_data['kilometer'] > 100000) {
-                                        $user_data['kilometer'] = 10000;
+                                        echo "<tr class = '$highlight_css'>";
+                                        echo "<td>" . $user_data['kilometer'] . " KM</td>";
+                                        echo "<td>" . $nextService2->format('Y-m-d') . "</td>";
+
+                                        $nextService = (clone $nextService2)->modify('+6 month');
+                                        $nextService2 = (clone $nextService);
+                                        $user_data['kilometer'] += 10000;
+
+                                        if ($user_data['kilometer'] > 100000) {
+                                            $user_data['kilometer'] = 10000;
+                                        }
                                     }
                                 }
-                            }
-                        
-                            ?>
-                        </tbody>
-                    </table> 
+
+                                ?>
+                            </tbody>
+                        </table>
                     <?php
-                }
-                ?>
+                    }
+                    ?>
                 </div>
             </div>
             <?php echo "<div class='col mt-4 mb-4'><a href='riwayat_servis.php?id=$id&noRangka=$noRangka' class='btn btn-success float-right' role='button' >Lihat Riwayat Servis</a></div>" ?>
@@ -186,7 +186,6 @@ $result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, noMesin, 
         <h2> Tanggal Servis Selanjutnya: <?php echo $tglServisTerakhir ?></h2>
         <h2> Due Date: <?php echo $diff->format("%R%a days ");
                         printf("(%d months, %d days)", $months, $days); ?> </h2>
-
         <div class="card" style="width: 18rem;">
             <div class="card-header">
                 Featured
