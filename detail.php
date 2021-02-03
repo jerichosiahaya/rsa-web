@@ -123,10 +123,18 @@ $result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, noMesin, 
                     <input type="button" name="simpanmobil" class="btn btn-primary" value="Simpan" id="simpanmobil" disabled>
                 </div>
 
-
+                
                 <div class="col-sm">
                     <h3 class="mt-4">Interval Servis</h3>
-
+                    <?php
+                    if (empty($kilometer)) {
+                    ?>
+                        <div class="alert alert-info" role="alert">
+                            <i class="fa fa-info-circle"></i> Belum ada data Kilometer
+                        </div>
+                    <?php
+                    } else {
+                    ?> 
                     <table class="table is-bordered" id="tabel-data1">
                         <thead>
                             <tr>
@@ -145,12 +153,12 @@ $result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, noMesin, 
                                 $dateNow = new DateTime($tglServisTerakhir);
                                 $nextService2 = (clone $dateNow);
                                 for ($i = 0; $i < 10; $i++) {
-
-
-                                    $nextService = (clone $nextService2)->modify('+6 month');
+                                
                                     echo "<tr class = '$highlight_css'>";
                                     echo "<td>" . $user_data['kilometer'] . " KM</td>";
-                                    echo "<td>" . $nextService->format('Y-m-d') . "</td>";
+                                    echo "<td>" . $nextService2->format('Y-m-d') . "</td>";
+                                    
+                                    $nextService = (clone $nextService2)->modify('+6 month');
                                     $nextService2 = (clone $nextService);
                                     $user_data['kilometer'] += 10000;
 
@@ -159,10 +167,13 @@ $result = mysqli_query($conn, "select nama, alamat, telepon, noPolisi, noMesin, 
                                     }
                                 }
                             }
+                        
                             ?>
                         </tbody>
-                    </table>
-
+                    </table> 
+                    <?php
+                }
+                ?>
                 </div>
             </div>
             <?php echo "<div class='col mt-4 mb-4'><a href='riwayat_servis.php?id=$id&noRangka=$noRangka' class='btn btn-success float-right' role='button' >Lihat Riwayat Servis</a></div>" ?>
